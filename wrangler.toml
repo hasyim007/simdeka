@@ -1,0 +1,21 @@
+# SIMDEKA — konfigurasi Cloudflare Worker (dibaca otomatis saat deploy dari GitHub)
+name = "simdeka"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# File statis (halaman login, admin, publik) ada di folder public/
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# Worker dijalankan lebih dulu untuk /api/* dan /admin/* (cek login)
+run_worker_first = ["/api/*", "/admin", "/admin/*"]
+
+# Database D1.
+# GANTI database_id di bawah dengan ID database D1 Anda (Dashboard → D1 → database → salin "Database ID").
+[[d1_databases]]
+binding = "DB"
+database_name = "simdeka"
+database_id = "fd932f87-0083-4162-919f-2c4c10a51cf8"
+
+# Opsional: kata sandi awal akun "admin" (disarankan diisi lewat Dashboard → Settings → Variables and Secrets,
+# nama ADMIN_PASSWORD, tipe Secret). Jika tidak diisi, kata sandi awal = admin123 lalu WAJIB diganti saat login pertama.

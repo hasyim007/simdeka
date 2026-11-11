@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Laporan Kehadiran — SIMDEKA</title>
+<link rel="icon" href="/img/logo.webp">
+<style>
+:root{--navy:#173b70;--line:#e2e8f0;--bg:#f5f7fb;--ink:#0f172a;--mute:#64748b}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:860px;margin:0 auto;padding:20px 14px 48px}
+.brand{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--navy);margin-bottom:6px}
+h1{font-size:22px;margin:0 0 4px}.sub{color:var(--mute);margin:0 0 18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}.kpi b{display:block;font-size:24px}.kpi span{font-size:11px;color:var(--mute)}
+.pct{font-size:34px;font-weight:800}.bar{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:#10b981}
+table{width:100%;border-collapse:collapse}th,td{padding:8px 6px;border-top:1px solid var(--line);text-align:center}th{font-size:11px;color:var(--mute);border-top:0}td:first-child,th:first-child{text-align:left}
+.h{color:#047857;font-weight:700}.i{color:#b45309;font-weight:700}.a{color:#dc2626;font-weight:700}
+.scroll{overflow-x:auto}.err{text-align:center;padding:60px 10px;color:var(--mute)}
+button{font:inherit;font-weight:700;border:0;background:var(--navy);color:#fff;border-radius:10px;padding:9px 14px;cursor:pointer}
+@media print{body{background:#fff}button{display:none}.card{break-inside:avoid}}
+</style>
+</head>
+<body><div class="wrap" id="root"><div class="err">Memuat laporan…</div></div>
+<script>
+(function(){
+  var root=document.getElementById('root');
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+  var id=decodeURIComponent((location.pathname.split('/')[2]||'')), tg=new URLSearchParams(location.search).get('tg')||'';
+  if(!id){root.innerHTML='<div class="err">Tautan laporan tidak lengkap.</div>';return;}
+  fetch('/api/public/forms/'+encodeURIComponent(id)+'/report'+(tg?'?tg='+encodeURIComponent(tg):''),{cache:'no-store'})
+  .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Laporan tidak tersedia');return j;});})
+  .then(function(j){
+    var s=j.summary||{},pct=s.percentage!=null?s.percentage:0;
+    var tgl=j.tanggal?new Date(j.tanggal+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+    document.title='Laporan — '+(j.title||'Absensi');
+    root.innerHTML='<div class="brand">SIMDEKA • LAPORAN KEHADIRAN</div><h1>'+esc(j.title)+'</h1><p class="sub">'+esc(j.jenis?j.jenis+' • ':'')+esc(tgl)+'</p>'
+    +'<div class="card"><div class="pct">'+pct+'%</div><div class="sub" style="margin:0">Kehadiran</div><div class="bar"><i style="width:'+Math.min(100,pct)+'%"></i></div></div>'
+    +'<div class="card kpis"><div class="kpi"><b>'+s.total+'</b><span>Peserta</span></div><div class="kpi"><b class="h">'+s.hadir+'</b><span>Hadir</span></div><div class="kpi"><b class="i">'+s.izin+'</b><span>Izin</span></div><div class="kpi"><b class="a">'+s.alpa+'</b><span>Alpa</span></div><div class="kpi"><b>'+s.belum+'</b><span>Belum mengisi</span></div></div>'
+    +(j.ai?'<div class="card"><b>Kesimpulan</b><p style="margin:6px 0 0">'+esc(j.ai)+'</p></div>':'')
+    +'<div class="card scroll"><table><thead><tr><th>Kelompok</th><th>Peserta</th><th>Hadir</th><th>Izin</th><th>Alpa</th><th>Belum</th></tr></thead><tbody>'
+    +(j.kelompok||[]).map(function(k){return '<tr><td>'+esc(k.nama)+'</td><td>'+k.total+'</td><td class="h">'+k.hadir+'</td><td class="i">'+k.izin+'</td><td class="a">'+k.alpa+'</td><td>'+k.belum+'</td></tr>';}).join('')
+    +'</tbody></table></div><button onclick="print()">Cetak / simpan PDF</button>';
+  }).catch(function(e){root.innerHTML='<div class="err"><b>Laporan tidak dapat dibuka</b><br>'+esc(e.message)+'</div>';});
+})();
+</script>
+</body></html>

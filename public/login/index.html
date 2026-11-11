@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<title>Masuk — SIMDEKA</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#173b70" />
+<link rel="icon" href="/img/logo.webp">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            navy: '#173B70',
+            ink: '#152033',
+            mist: '#F5F7FB',
+            line: '#E8ECF3',
+            greenx: '#18A66A',
+            orangex: '#F59E0B'
+          },
+          boxShadow: {
+            soft: '0 12px 35px rgba(23,59,112,.08)',
+            card: '0 5px 20px rgba(15,23,42,.05)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="/css/app.css?v=2f37f57e">
+</head>
+<body>
+<!-- LOGIN -->
+<div id="loginScreen" data-step="welcome" class="fixed inset-0 z-[100] overflow-y-auto bg-white">
+ <div class="min-h-full flex">
+  <div class="relative w-full min-h-screen bg-white overflow-hidden flex flex-col md:flex-row">
+
+   <section id="lgWelcome" class="lg-blue relative md:w-[46%] text-white px-8 pt-10 pb-16 md:py-12 md:pl-12 md:pr-[170px] flex flex-col items-center text-center">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+     <span class="lg-orb" style="width:260px;height:260px;top:-90px;left:-80px;--dur:15s"></span>
+     <span class="lg-orb" style="width:200px;height:200px;bottom:14%;right:-70px;--dur:12s;animation-direction:alternate-reverse"></span>
+     <span class="lg-orb" style="width:120px;height:120px;top:42%;left:8%;--dur:10s"></span>
+    </div>
+    <div class="relative z-10 flex-1 w-full flex flex-col items-center justify-center">
+     <p class="lg-wl lg-a text-lg font-semibold tracking-wide text-white/90" style="--d:.15s">WELCOME</p>
+     <div id="lgLogo" class="mt-6 w-24 h-24 rounded-full bg-white grid place-items-center shadow-[0_10px_30px_rgba(0,0,0,.18)]"><img class="app-logo w-[74px] h-[74px] object-contain" alt="Logo SIMDEKA"></div>
+     <h1 id="lgTitle" class="mt-4 text-3xl font-extrabold tracking-wide">SIMDEKA</h1>
+     <p class="lg-wl lg-a mt-1 font-semibold uppercase tracking-[.12em] text-white/80 whitespace-nowrap leading-relaxed" style="--d:.85s;font-size:clamp(9px,2.9vw,11px)">Sistem Informasi dan Manajemen Data<br>Desa Karangmojo</p>
+     <p class="lg-wl lg-a mt-6 text-[13px] leading-relaxed text-white/75 max-w-xs text-justify hyphens-auto" lang="id" style="--d:1.05s">SIMDEKA hadir sebagai sistem terintegrasi untuk mengelola data dan informasi Desa Karangmojo secara terpusat, tertib, dan efisien. Sistem ini mencakup pengelolaan data pengurus dan kelompok, database generus se-Desa Karangmojo, data kehadiran, serta administrasi kegiatan. Seluruh data dikelola secara sistematis, aman, dan mudah diakses sesuai kebutuhan.</p>
+    </div>
+    <div class="lg-wl lg-a relative z-10 md:hidden w-full max-w-xs mt-8" style="--d:1.3s">
+     <div id="swTrack" class="relative h-14 rounded-full bg-white/15 border border-white/30 overflow-hidden select-none">
+      <div id="swFill" class="absolute inset-y-0 left-0 rounded-full bg-white/20" style="width:52px"></div>
+      <span id="swLabel" class="absolute inset-0 grid place-items-center pl-10 text-sm font-semibold text-white/85 pointer-events-none">Geser untuk masuk</span>
+      <button id="swKnob" type="button" aria-label="Geser ke kanan atau ketuk untuk masuk" class="lg-nudge absolute top-1 left-1 w-12 h-12 rounded-full bg-white grid place-items-center shadow-lg" style="touch-action:none;color:#1259c9"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+     </div>
+    </div>
+    <div style="--d:1.3s" class="lg-a relative z-10 hidden md:flex w-full justify-between text-[10px] font-semibold uppercase tracking-widest text-white/65 pt-8"><span>Database Desa</span><span>Kepengurusan • Generus</span></div>
+   </section>
+
+   <section class="relative flex-1 bg-white px-8 sm:px-14 lg:px-20 py-10 md:py-14 flex items-center">
+    <svg class="hidden md:block absolute top-0 bottom-0 right-[calc(100%-1px)] w-[131px] h-full pointer-events-none" viewBox="0 0 130 2000" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><path d="M130 0 L52 0 A28 42.5 0 0 0 52 85 A39 46.5 0 0 0 52 178 A24 37.0 0 0 0 52 252 A32 50.0 0 0 0 52 352 A30 42.0 0 0 0 52 436 A39 50.0 0 0 0 52 536 A28 47.5 0 0 0 52 631 A28 42.0 0 0 0 52 715 A36 51.5 0 0 0 52 818 A26 35.0 0 0 0 52 888 A25 40.0 0 0 0 52 968 A24 44.5 0 0 0 52 1057 A39 43.5 0 0 0 52 1144 A37 47.0 0 0 0 52 1238 A38 47.5 0 0 0 52 1333 A35 39.0 0 0 0 52 1411 A25 38.0 0 0 0 52 1487 A39 39.0 0 0 0 52 1565 A32 41.5 0 0 0 52 1648 A33 48.5 0 0 0 52 1745 A40 48.0 0 0 0 52 1841 A35 47.0 0 0 0 52 1935 A37 32.5 0 0 0 52 2000 L130 2000 Z" fill="#fff" fill-opacity="0.2"/><path d="M130 0 L74 0 A33 42.0 0 0 0 74 84 A26 47.0 0 0 0 74 178 A23 41.0 0 0 0 74 260 A26 37.5 0 0 0 74 335 A38 42.5 0 0 0 74 420 A34 41.5 0 0 0 74 503 A36 35.5 0 0 0 74 574 A36 50.5 0 0 0 74 675 A37 47.0 0 0 0 74 769 A34 41.0 0 0 0 74 851 A37 37.5 0 0 0 74 926 A22 42.0 0 0 0 74 1010 A38 43.5 0 0 0 74 1097 A37 48.0 0 0 0 74 1193 A25 47.0 0 0 0 74 1287 A25 43.0 0 0 0 74 1373 A34 37.0 0 0 0 74 1447 A25 47.0 0 0 0 74 1541 A32 36.5 0 0 0 74 1614 A24 42.5 0 0 0 74 1699 A38 50.5 0 0 0 74 1800 A26 41.5 0 0 0 74 1883 A23 58.5 0 0 0 74 2000 L130 2000 Z" fill="#fff" fill-opacity="0.42"/><path d="M130 0 L98 0 A20 41.5 0 0 0 98 83 A21 51.5 0 0 0 98 186 A27 40.0 0 0 0 98 266 A21 35.5 0 0 0 98 337 A31 39.5 0 0 0 98 416 A23 42.5 0 0 0 98 501 A34 45.5 0 0 0 98 592 A28 46.0 0 0 0 98 684 A28 47.5 0 0 0 98 779 A27 46.0 0 0 0 98 871 A31 41.5 0 0 0 98 954 A27 45.0 0 0 0 98 1044 A36 44.5 0 0 0 98 1133 A27 48.0 0 0 0 98 1229 A33 49.5 0 0 0 98 1328 A22 50.5 0 0 0 98 1429 A31 49.5 0 0 0 98 1528 A30 49.0 0 0 0 98 1626 A32 49.0 0 0 0 98 1724 A35 37.0 0 0 0 98 1798 A26 35.5 0 0 0 98 1869 A25 39.0 0 0 0 98 1947 A29 26.5 0 0 0 98 2000 L130 2000 Z" fill="#fff" fill-opacity="1"/></svg>
+    <svg class="md:hidden absolute left-0 right-0 bottom-full w-full h-16 pointer-events-none" viewBox="0 0 400 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 64 L0 28 A39.5 18 0 0 1 79 28 A35.0 20 0 0 1 149 28 A47.0 16 0 0 1 243 28 A34.5 15 0 0 1 312 28 A44.0 20 0 0 1 400 28 L400 64 Z" fill="#fff" fill-opacity="0.2"/><path d="M0 64 L0 42 A46.5 19 0 0 1 93 42 A40.5 16 0 0 1 174 42 A37.5 14 0 0 1 249 42 A42.5 22 0 0 1 334 42 A33.0 15 0 0 1 400 42 L400 64 Z" fill="#fff" fill-opacity="0.42"/><path d="M0 64 L0 56 A47.0 16 0 0 1 94 56 A48.5 17 0 0 1 191 56 A36.5 18 0 0 1 264 56 A32.0 17 0 0 1 328 56 A36.0 16 0 0 1 400 56 L400 64 Z" fill="#fff" fill-opacity="1"/></svg>
+
+    <form id="loginForm" onsubmit="doLogin(event)" novalidate class="w-full max-w-sm mx-auto"><div id="lgForm">
+     <button type="button" onclick="setLoginStep('welcome')" class="md:hidden mb-4 inline-flex items-center gap-1 text-xs font-semibold text-slate-400"><i data-lucide="chevron-left" class="w-4 h-4"></i>Kembali</button>
+     <h2 class="text-2xl font-extrabold text-slate-800 text-center">Masuk ke Akun Anda</h2>
+     <p class="text-xs text-slate-400 text-center mt-2">Gunakan akun terdaftar untuk mengakses SIMDEKA.</p>
+     <div id="loginErr" role="alert" class="hidden mt-6 rounded-xl bg-red-50 border border-red-100 text-red-600 text-xs font-semibold px-4 py-3"></div>
+
+     <div class="mt-8">
+      <label for="loginUser" class="block text-sm font-bold text-slate-700">Username</label>
+      <div class="relative">
+       <input id="loginUser" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" oninput="loginInput()" placeholder="Masukkan username" class="lg-input w-full bg-transparent pt-3 pb-2 pr-8 text-sm placeholder:text-slate-300">
+       <svg id="chkUser" class="hidden absolute right-0 bottom-2.5 w-4 h-4 text-sky-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+     </div>
+
+     <div class="mt-6">
+      <label for="loginPass" class="block text-sm font-bold text-slate-700">Kata Sandi</label>
+      <div class="relative">
+       <input id="loginPass" type="password" autocomplete="current-password" oninput="loginInput()" placeholder="Masukkan kata sandi" class="lg-input w-full bg-transparent pt-3 pb-2 pr-9 text-sm placeholder:text-slate-300">
+       <button type="button" onclick="togglePass()" title="Tampilkan / sembunyikan kata sandi" class="absolute right-0 bottom-1.5 w-7 h-7 grid place-items-center text-sky-500">
+        <svg id="eyeOn" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="eyeOff" class="hidden w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.1 10.1 0 0 1 12 19c-6.5 0-10-7-10-7a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.1 9.1 0 0 1 12 4c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="m2 2 20 20"/></svg>
+       </button>
+      </div>
+     </div>
+
+     <label class="mt-6 flex items-center gap-2 text-[11px] text-slate-400 cursor-pointer select-none"><input id="loginRemember" type="checkbox" class="w-3.5 h-3.5 accent-[#1467d8]"> <span>Ingat saya di perangkat ini</span></label>
+
+     <div class="mt-8 flex items-center justify-center gap-4">
+      <button type="submit" class="lg-btn h-11 px-9 rounded-full text-white text-sm font-bold transition">Masuk</button>
+      <button type="button" onclick="resetLogin()" class="h-11 px-9 rounded-full border-2 border-slate-200 text-slate-400 text-sm font-bold hover:border-slate-300 hover:text-slate-500 transition">Reset</button>
+     </div>
+     <p id="loginHint" class="hidden mt-6 text-center text-[11px] text-slate-400">Akun default: <b class="text-slate-500">admin</b> / <b class="text-slate-500">admin</b></p>
+    </div></form>
+   </section>
+  </div>
+ </div>
+</div>
+<script>window.SIMDEKA_PAGE='login';</script>
+<script>
+const APP_LOGO='/img/logo.webp';
+const loginEl=id=>document.getElementById(id);
+
+function showLoginError(msg){
+ const box=loginEl('loginErr'); box.textContent=msg; box.classList.remove('hidden');
+ const f=loginEl('loginForm'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake');
+}
+function loginInput(){
+ loginEl('loginErr').classList.add('hidden');
+ loginEl('chkUser').classList.toggle('hidden',!loginEl('loginUser').value.trim());
+}
+function togglePass(){
+ const i=loginEl('loginPass'), show=i.type==='password';
+ i.type=show?'text':'password';
+ loginEl('eyeOn').classList.toggle('hidden',show);
+ loginEl('eyeOff').classList.toggle('hidden',!show);
+}
+function resetLogin(){
+ loginEl('loginUser').value='';loginEl('loginPass').value='';loginEl('loginRemember').checked=false;
+ loginEl('loginPass').type='password';loginEl('eyeOn').classList.remove('hidden');loginEl('eyeOff').classList.add('hidden');
+ loginEl('loginErr').classList.add('hidden');loginEl('chkUser').classList.add('hidden');
+ loginEl('loginUser').focus();
+}
+async function doLogin(e){
+ e.preventDefault();
+ const u=loginEl('loginUser').value.trim(), pw=loginEl('loginPass').value;
+ if(!u||!pw){showLoginError('Username dan kata sandi wajib diisi.');return;}
+ try{
+  const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:u,password:pw,remember:loginEl('loginRemember').checked})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){showLoginError(j.error||'Gagal masuk.');loginEl('loginPass').value='';loginEl('loginPass').focus();return;}
+  location.replace('/admin/');
+ }catch(err){showLoginError('Tidak dapat terhubung ke server.');}
+}
+
+function setLoginStep(s){loginEl('loginScreen').dataset.step=s;loginEl('loginScreen').scrollTop=0;swSet(0,false);}
+/* Geser untuk masuk (mobile) */
+function __unused_setLoginStep(s){
+ loginEl('loginScreen').dataset.step=s;
+ loginEl('loginScreen').scrollTop=0;
+ swSet(0,false);
+}
+const swTrack=loginEl('swTrack'), swKnob=loginEl('swKnob'), swFill=loginEl('swFill'), swLabel=loginEl('swLabel');
+let swStartX=0, swDx=0, swMoved=0, swMax=0, swDrag=false;
+function swSet(dx,anim){
+ const t=anim?'transform .25s ease, width .25s ease, opacity .25s':'none';
+ swKnob.style.transition=t; swFill.style.transition=t;
+ swKnob.style.transform='translateX('+dx+'px)';
+ swFill.style.width=(dx+52)+'px';
+ swLabel.style.opacity=swMax?Math.max(0,1-dx/(swMax*.7)):1;
+ swDx=dx;
+}
+function swDone(){
+ swMax=swTrack.clientWidth-swKnob.offsetWidth-8;
+ swSet(swMax,true);
+ setTimeout(()=>setLoginStep('form'),220);
+}
+swKnob.addEventListener('pointerdown',e=>{
+ swDrag=true; swMoved=0; swStartX=e.clientX; swMax=swTrack.clientWidth-swKnob.offsetWidth-8;
+ swKnob.setPointerCapture(e.pointerId);
+});
+swKnob.addEventListener('pointermove',e=>{
+ if(!swDrag) return;
+ const raw=e.clientX-swStartX; swMoved=Math.max(swMoved,Math.abs(raw));
+ swSet(Math.max(0,Math.min(swMax,raw)),false);
+});
+function swEnd(){
+ if(!swDrag) return; swDrag=false;
+ if(swMoved<6||swDx>=swMax*.7) swDone(); else swSet(0,true);
+}
+swKnob.addEventListener('pointerup',swEnd);
+swKnob.addEventListener('pointercancel',()=>{swDrag=false;swSet(0,true);});
+swKnob.addEventListener('click',e=>{ if(e.detail===0) swDone(); }); /* keyboard / aksesibilitas */
+swKnob.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){e.preventDefault();swDone();} });
+
+
+
+document.querySelectorAll('img.app-logo').forEach(i=>i.src=APP_LOGO);
+if(window.lucide)lucide.createIcons();
+setLoginStep('welcome');resetLogin();
+fetch('/api/me').then(r=>r.ok?r.json():null).then(j=>{if(j&&j.user)location.replace('/admin/');}).catch(()=>{});
+fetch('/api/login-hint').then(r=>r.json()).then(h=>{if(h&&h.default)loginEl('loginHint').classList.remove('hidden');}).catch(()=>{});
+</script>
+</body>
+</html>

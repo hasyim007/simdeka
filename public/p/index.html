@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b1f3f">
+<title>Presentasi Laporan — SIMDEKA</title>
+<link rel="icon" href="/img/logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--nv:#0b1f3f;--nv2:#16335f;--go:#c9a227;--gd:#8a6d12;--iv:#f8f5ee;--ink:#1b2433;--mu:#6b7280;--ln:#e4dfd3;--gr:#2f8f6b;--rd:#c2493b;--am:#c98a1b;--bl:#3b6fb6;--pa:#efe9da;--ease:cubic-bezier(.65,0,.25,1)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#050d1c;overflow:hidden;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#wrap{position:fixed;inset:0;display:grid;place-items:center}
+#stage{width:1280px;height:720px;position:relative;overflow:hidden;transform-origin:center center;background:var(--nv);border-radius:0;box-shadow:0 30px 80px rgba(0,0,0,.5);transition:background .9s var(--ease)}
+#stage.light{background:var(--iv)}
+.orb{position:absolute;border-radius:50%;transition:all 1s var(--ease);pointer-events:none;filter:blur(.3px)}
+#orbA{background:radial-gradient(circle at 30% 30%,#2a4f8d,#16335f);opacity:.55}
+#orbB{background:radial-gradient(circle at 40% 35%,#e7c75b,#c9a227);opacity:.22}
+.light #orbA{background:radial-gradient(circle at 30% 30%,#e7c75b,#c9a227);opacity:.16}
+.light #orbB{background:radial-gradient(circle at 40% 35%,#2a4f8d,#16335f);opacity:.1}
+#rule{position:absolute;height:4px;background:var(--go);border-radius:4px;transition:all 1s var(--ease)}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .55s var(--ease),transform .7s var(--ease),visibility 0s .7s}
+.slide.on{opacity:1;visibility:visible;transform:none;transition:opacity .7s .25s var(--ease),transform .8s .25s var(--ease),visibility 0s}
+.slide.past{transform:translateY(-16px)}
+.eb{position:absolute;left:70px;top:40px;font-size:12px;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--gd)}
+.dark .eb,.eb.d{color:var(--go)}
+h1,h2,.serif{font-family:Lora,Georgia,serif}
+.ttl{position:absolute;left:70px;top:66px;right:70px;font-family:Lora,Georgia,serif;font-size:34px;font-weight:700;color:var(--nv);line-height:1.15}
+.kel-tag{position:absolute;right:70px;top:44px;font-family:Lora,serif;font-style:italic;font-size:17px;color:var(--gd)}
+.foot{position:absolute;left:70px;right:70px;bottom:20px;display:flex;justify-content:space-between;font-size:11px;color:var(--mu);border-top:1px solid var(--ln);padding-top:9px}
+.body{position:absolute;left:70px;right:70px;top:140px;bottom:56px}
+.card{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(228,223,211,.9);border-radius:20px;box-shadow:0 14px 40px -18px rgba(27,36,51,.28)}
+.grid{display:grid;gap:16px}
+.kpi{padding:18px 20px;position:relative;overflow:hidden}.kpi:before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--c)}
+.kpi small{display:block;font-size:12px;color:var(--mu);font-weight:600}.kpi b{display:block;font-family:Lora,serif;font-size:34px;color:var(--c);margin:2px 0}.kpi span{font-size:11px;color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:14px}th{background:var(--nv2);color:#fff;text-align:left;padding:11px 14px;font-size:12px;letter-spacing:.04em}
+td{padding:11px 14px;border-bottom:1px solid var(--ln)}tr:nth-child(even) td{background:rgba(248,245,238,.7)}
+.c{text-align:center}.tbl{overflow:hidden;border-radius:16px}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.bar{height:10px;border-radius:9px;background:#e8e3d6;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;transition:width 1.2s .5s var(--ease);width:0}
+.on .bar i{width:var(--w)}
+.dk{color:#fff}.dk .mut{color:#b7c4dd}
+.cover-t{position:absolute;left:90px;top:300px;width:700px;font-family:Lora,serif;font-size:46px;font-weight:700;line-height:1.12;color:#fff}
+.stat{font-family:Lora,serif;font-size:32px;font-weight:700;color:var(--go)}.statl{font-size:12px;color:#b7c4dd;margin-top:2px}
+.item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--ln);font-size:16px;line-height:1.45}.item b.d{flex:none;background:var(--pa);color:var(--gd);border-radius:99px;padding:3px 12px;font-size:12px;height:fit-content}
+.logo{width:74px;height:74px;border-radius:18px;background:#fff;padding:6px;object-fit:contain}
+#ui{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:10px;z-index:5;opacity:.0;transition:opacity .3s}
+body:hover #ui,#ui.show{opacity:1}
+#ui button{border:0;border-radius:99px;width:40px;height:40px;background:rgba(255,255,255,.14);color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(8px)}
+#ui button:hover{background:rgba(255,255,255,.28)}#cnt{color:#cbd5e1;font-size:12px;font-weight:600;min-width:64px;text-align:center}
+#prog{position:fixed;left:0;top:0;height:3px;background:var(--go);transition:width .5s var(--ease);z-index:6}
+#msg{position:fixed;inset:0;display:grid;place-items:center;color:#cbd5e1;font-size:15px;text-align:center;padding:24px}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="wrap"><div id="stage"><div class="orb" id="orbA"></div><div class="orb" id="orbB"></div><div id="rule"></div><div id="slides"></div></div></div>
+<div id="msg">Memuat presentasi…</div>
+<div id="ui"><button id="bp" aria-label="Sebelumnya">‹</button><span id="cnt"></span><button id="bn" aria-label="Berikutnya">›</button><button id="bf" aria-label="Layar penuh">⛶</button></div>
+<script>
+(function(){
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+var cut=function(t,n){t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n-1).trimEnd()+'…':t;};
+var tglS=function(i){return /^\d{4}-\d{2}-\d{2}$/.test(i||'')?new Date(i+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'-';};
+var tglP=function(i){return /^\d{4}-\d{2}-\d{2}$/.test(i||'')?new Date(i+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}):'-';};
+var col=function(p){return p==null?'#6b7280':p>=85?'#2f8f6b':p>=70?'#3b6fb6':p>=50?'#c98a1b':'#c2493b';};
+var MODE={
+ cover:{a:[860,-180,680],b:[1090,450,380],r:[90,285,110],dark:1},
+ div:{a:[-260,340,620],b:[1020,-130,340],r:[90,430,110],dark:1},
+ content:{a:[1150,-120,300],b:[-70,650,150],r:[70,150,90],dark:0},
+ end:{a:[960,-200,600],b:[-140,520,360],r:[90,140,110],dark:1}
+};
+var slides=[],cur=0,stage=document.getElementById('stage'),host=document.getElementById('slides'),per='',no=0;
+function add(mode,eb,title,inner,opt){
+ opt=opt||{};no++;var M=MODE[mode],n=no;
+ var s=document.createElement('section');s.className='slide';s.dataset.mode=mode;
+ var foot=mode==='content'?'<div class="foot"><span>SIMDEKA &nbsp;|&nbsp; Laporan Jurnal Pengajian Muda Mudi Kelompok &nbsp;|&nbsp; '+esc(per)+'</span><span>'+n+'</span></div>':'';
+ var head='';
+ if(mode==='content')head='<div class="eb">'+esc(eb)+'</div><div class="ttl">'+esc(title)+'</div>'+(opt.kel?'<div class="kel-tag">'+esc(opt.kel)+'</div>':'');
+ else if(mode==='div')head='<div class="eb d" style="top:150px">'+esc(eb)+'</div><div class="serif dk" style="position:absolute;left:90px;top:205px;width:900px;font-size:'+(opt.kel&&opt.kel.length>22?52:66)+'px;font-weight:700;line-height:1.08">'+esc(opt.kel||title)+'</div><div class="dk mut" style="position:absolute;left:90px;top:455px;font-size:20px">'+esc(title)+'</div>';
+ else if(mode==='end')head='<div class="eb d">'+esc(eb)+'</div><div class="serif dk" style="position:absolute;left:90px;top:170px;width:900px;font-size:38px;font-weight:700">'+esc(title)+'</div>';
+ else head='<div class="eb d" style="left:90px;top:230px">'+esc(eb)+'</div><div class="cover-t">'+esc(title)+'</div>';
+ s.innerHTML=head+inner+foot;host.appendChild(s);slides.push(s);return s;
+}
+function kpi(l,v,sub,c){return '<div class="card kpi" style="--c:'+c+'"><small>'+esc(l)+'</small><b>'+esc(v)+'</b><span>'+esc(sub||'')+'</span></div>';}
+function stat(v,l){return '<div><div class="stat">'+esc(v)+'</div><div class="statl">'+esc(l)+'</div></div>';}
+function items(list,max){return list.slice(0,max).map(function(it){return '<div class="item"><b class="d">'+tglP(it.tgl)+'</b><span>'+esc(cut(it.t,300))+'</span></div>';}).join('');}
+
+function build(P){
+ var D=P.D,T=D.tot,K=D.kel;per=P.per;
+ add('cover','Laporan jurnal pengajian muda mudi kelompok','Jurnal, capaian, dan kendala setiap kelompok',
+  '<img class="logo" src="/img/logo.webp" style="position:absolute;left:90px;top:70px" alt=""><div class="serif dk" style="position:absolute;left:190px;top:76px;font-size:28px;font-weight:700">SIMDEKA</div><div class="dk mut" style="position:absolute;left:190px;top:118px;font-size:14px">Sistem Informasi dan Manajemen Desa Karangmojo</div>'
+  +'<div class="dk" style="position:absolute;left:90px;top:520px;font-size:20px;color:#dce6f5">Periode '+esc(per)+(P.kel?' &nbsp;|&nbsp; '+esc(P.kel):'')+'</div><div class="dk mut" style="position:absolute;left:90px;top:560px;font-size:15px">Bahan laporan kelompok kepada desa untuk musyawarah</div><div class="dk mut" style="position:absolute;left:90px;top:660px;font-size:13px">Karangmojo, '+esc(P.tgl||'')+'</div>');
+ var kd=K.filter(function(x){return x.p!=null;}).sort(function(a,b){return b.p-a.p;});
+ add('content','Ringkasan','Gambaran seluruh kelompok',
+  '<div class="body"><div class="grid" style="grid-template-columns:1fr 1fr 1.25fr;grid-template-rows:repeat(3,1fr);height:100%">'
+  +kpi('Kelompok melapor',T.melapor+' dari '+T.kel,'jurnal atau absensi masuk','#16335f')+kpi('Pertemuan dijadwalkan',T.n,'per kelompok dijumlahkan','#16335f')
+  +'<div class="card" style="grid-column:3;grid-row:1/4;padding:20px;overflow:hidden"><div class="serif" style="font-size:17px;font-weight:700;color:var(--nv);margin-bottom:12px">Kehadiran per kelompok</div>'
+  +(kd.length?kd.slice(0,9).map(function(x){return '<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>'+esc(cut(x.k,26))+'</span><span style="color:'+col(x.p)+'">'+x.p+'%</span></div><div class="bar"><i style="--w:'+Math.min(100,x.p)+'%;background:'+col(x.p)+'"></i></div></div>';}).join(''):'<div style="color:var(--mu);font-size:14px;text-align:center;margin-top:90px">Belum ada data kehadiran.</div>')+'</div>'
+  +kpi('Jurnal terisi',T.jur+' dari '+T.n,T.n?Math.round(T.jur/T.n*100)+'% pertemuan':'','#2f8f6b')+kpi('Nasehat terlaksana',T.nasS+' dari '+T.nd,(T.nasB?T.nasB+' belum terlaksana':''),'#2f8f6b')
+  +kpi('Kehadiran rata-rata',T.p==null?'-':T.p+'%','hadir dari seluruh catatan',col(T.p))+kpi('Kendala dilaporkan',T.kendala,T.catatan+' catatan untuk desa',T.kendala?'#c2493b':'#6b7280')
+  +'</div></div>');
+ for(var o=0;o<K.length;o+=8){
+  add('content','Rekap','Capaian jurnal per kelompok'+(K.length>8?' ('+(o/8+1)+'/'+Math.ceil(K.length/8)+')':''),
+   '<div class="body"><div class="card tbl"><table><thead><tr><th>Kelompok</th><th class="c">Jurnal terisi</th><th class="c">Nasehat terlaksana</th><th class="c">Kehadiran</th><th class="c">Kendala</th><th class="c">Status</th></tr></thead><tbody>'
+   +K.slice(o,o+8).map(function(x){var st=x.lap===0?['Belum melapor','#c2493b']:x.lap<x.n?['Sebagian','#c98a1b']:['Lengkap','#2f8f6b'];
+    return '<tr><td><b>'+esc(x.k)+'</b></td><td class="c">'+x.jur+'/'+x.n+'</td><td class="c">'+(x.nd?x.nasS+'/'+x.nd:'-')+'</td><td class="c"><b style="color:'+col(x.p)+'">'+(x.p==null?'-':x.p+'%')+'</b></td><td class="c" style="color:'+(x.kendala.length?'#c2493b':'#6b7280')+'">'+(x.kendala.length?x.kendala.length+' catatan':'Tidak ada')+'</td><td class="c"><b style="color:'+st[1]+'">'+st[0]+'</b></td></tr>';}).join('')
+   +'</tbody></table></div></div>');
+ }
+ K.forEach(function(k,ki){
+  add('div','Kelompok '+String(ki+1).padStart(2,'0')+' dari '+K.length,'Jurnal, capaian, dan kendala pengajian',
+   '<div style="position:absolute;left:90px;top:540px;right:90px;border-top:1px solid rgba(255,255,255,.25);padding-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px">'
+   +stat(k.lap+' / '+k.n,'pertemuan dilaporkan')+stat(k.jur+' / '+k.n,'jurnal terisi')+stat(k.nd?k.nasS+' / '+k.nd:'-','nasehat terlaksana')+stat(k.p==null?'-':k.p+'%','kehadiran')+'</div>',{kel:k.k});
+  if(k.lap===0){
+   add('content','Jurnal pengajian','Jurnal pengajian','<div class="body"><div class="card" style="height:100%;display:grid;place-items:center;text-align:center;padding:40px"><div><div class="serif" style="font-size:24px;color:var(--mu)">Belum ada laporan dari kelompok ini pada periode '+esc(per)+'.</div><div style="margin-top:12px;color:var(--mu)">'+k.n+' pertemuan dijadwalkan. Mohon dilengkapi sebelum musyawarah.</div></div></div></div>',{kel:k.k});
+   return;
+  }
+  var PG=6,np=Math.ceil(k.rows.length/PG);
+  for(var o=0;o<k.rows.length;o+=PG){
+   add('content','Jurnal pengajian','Jurnal pengajian'+(np>1?' ('+(o/PG+1)+'/'+np+')':''),
+    '<div class="body"><div class="card tbl"><table><thead><tr><th style="width:130px">Tanggal</th><th>Al-Qur\'an</th><th>Al-Hadist</th><th>Nasehat keimaman</th></tr></thead><tbody>'
+    +k.rows.slice(o,o+PG).map(function(r){
+      if(!r.lap)return '<tr><td><b>'+tglS(r.tgl)+'</b></td><td colspan="3" style="color:var(--mu);font-style:italic">Belum ada laporan</td></tr>';
+      var q=r.q||r.m,ns=r.ns,nas=ns.st==='sudah'?'<b style="color:#2f8f6b">Sudah terlaksana</b>'+(ns.by?'<div style="font-size:11px;color:var(--mu)">Pengisi: '+esc(cut(ns.by,60))+'</div>':''):ns.st==='belum'?'<b style="color:#c2493b">Belum terlaksana</b>':ns.st==='tidak'?'<i style="color:var(--mu)">Tidak ada nasehat</i>':'<i style="color:var(--mu)">Belum diisi</i>';
+      return '<tr><td><b>'+tglS(r.tgl)+'</b></td><td>'+(q?esc(cut(q,90)):'-')+'</td><td>'+(r.h?esc(cut(r.h,110)):'-')+'</td><td>'+nas+'</td></tr>';}).join('')
+    +'</tbody></table></div></div>',{kel:k.k});
+  }
+  add('content','Capaian dan kendala','Capaian dan kendala pengajian',
+   '<div class="body"><div class="grid" style="grid-template-columns:.8fr 1.4fr;height:100%"><div class="card" style="padding:22px"><div class="serif" style="font-size:18px;font-weight:700;color:var(--nv);margin-bottom:14px">Capaian</div><div class="grid" style="grid-template-columns:1fr 1fr;gap:20px 10px">'
+   +[['Kehadiran',k.p==null?'-':k.p+'%',col(k.p)],['Pertemuan dilaporkan',k.lap+'/'+k.n,'#16335f'],['Jurnal terisi',k.jur+'/'+k.n,'#16335f'],['Nasehat terlaksana',k.nd?k.nasS+'/'+k.nd:'-',k.nasB?'#c98a1b':'#2f8f6b']].map(function(c){return '<div><div class="serif" style="font-size:30px;font-weight:700;color:'+c[2]+'">'+esc(c[1])+'</div><div style="font-size:12px;color:var(--mu)">'+c[0]+'</div></div>';}).join('')
+   +'</div><div style="margin-top:22px;font-weight:700;font-size:14px">Hadir '+k.H+' &nbsp; Izin '+k.I+' &nbsp; Alpa '+k.A+'</div></div>'
+   +'<div class="card" style="padding:22px;overflow:hidden"><div class="serif" style="font-size:18px;font-weight:700;color:var(--nv);margin-bottom:6px">Kendala pengajian</div>'
+   +(k.kendala.length?items(k.kendala,4)+(k.kendala.length>4?'<div style="font-size:12px;font-style:italic;color:var(--mu);margin-top:8px">+ '+(k.kendala.length-4)+' kendala lainnya di slide berikutnya</div>':''):'<div style="color:var(--mu);margin-top:50px;text-align:center">Tidak ada kendala yang dilaporkan pada periode ini.</div>')
+   +'</div></div></div>',{kel:k.k});
+  for(var o2=4;o2<k.kendala.length;o2+=6)add('content','Capaian dan kendala','Kendala pengajian (lanjutan)','<div class="body"><div class="card" style="padding:12px 26px;height:100%;overflow:hidden">'+items(k.kendala.slice(o2),6)+'</div></div>',{kel:k.k});
+  for(var o3=0;o3<k.catatan.length;o3+=5)add('content','Catatan','Catatan dan usulan untuk desa'+(k.catatan.length>5?' ('+(o3/5+1)+'/'+Math.ceil(k.catatan.length/5)+')':''),'<div class="body"><div class="card" style="padding:12px 26px;height:100%;overflow:hidden">'+items(k.catatan.slice(o3,o3+5),5)+'</div></div>',{kel:k.k});
+ });
+ var all=[];K.forEach(function(k){k.kendala.forEach(function(x){all.push({k:k.k,tgl:x.tgl,t:x.t});});});
+ if(!all.length)add('content','Bahan musyawarah','Kendala dari seluruh kelompok','<div class="body"><div class="card" style="height:100%;display:grid;place-items:center;text-align:center"><div class="serif" style="font-size:22px;color:var(--mu)">Tidak ada kendala yang dilaporkan oleh kelompok pada periode ini.</div></div></div>');
+ for(var o4=0;o4<all.length;o4+=6)add('content','Bahan musyawarah','Kendala dari seluruh kelompok'+(all.length>6?' ('+(o4/6+1)+'/'+Math.ceil(all.length/6)+')':''),
+  '<div class="body"><div class="card tbl"><table><thead><tr><th style="width:200px">Kelompok</th><th style="width:130px">Tanggal</th><th>Kendala pengajian</th></tr></thead><tbody>'+all.slice(o4,o4+6).map(function(x){return '<tr><td><b>'+esc(x.k)+'</b></td><td>'+tglS(x.tgl)+'</td><td>'+esc(cut(x.t,260))+'</td></tr>';}).join('')+'</tbody></table></div></div>');
+ add('end','Penutup','Mohon arahan dan keputusan musyawarah',
+  '<div class="dk" style="position:absolute;left:90px;top:250px;width:760px;font-size:18px;line-height:1.5;color:#dce6f5">Laporan ini disusun dari jurnal dan absensi pengajian muda mudi kelompok pada periode '+esc(per)+', sebagai bahan pembahasan di musyawarah desa.</div>'
+  +'<div style="position:absolute;left:90px;top:400px;right:90px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px">'+stat(T.n,'Pertemuan')+stat(T.melapor+'/'+T.kel,'Kelompok melapor')+stat(T.nd?T.nasS+'/'+T.nd:'-','Nasehat terlaksana')+stat(T.kendala,'Kendala')+'</div>'
+  +'<div class="dk" style="position:absolute;left:90px;right:90px;top:560px;display:flex;justify-content:space-between;text-align:center;font-size:15px;color:#dce6f5"><div>Mengetahui,<br>Pengurus</div><div>Karangmojo, '+esc(P.tgl||'')+'<br>Penyusun laporan</div></div>');
+}
+
+function show(i,dir){
+ if(i<0||i>=slides.length)return;
+ slides.forEach(function(s,ix){s.classList.toggle('on',ix===i);s.classList.toggle('past',ix<i);});
+ cur=i;var s=slides[i],M=MODE[s.dataset.mode];
+ stage.classList.toggle('light',!M.dark);
+ var a=document.getElementById('orbA'),b=document.getElementById('orbB'),r=document.getElementById('rule');
+ a.style.left=M.a[0]+'px';a.style.top=M.a[1]+'px';a.style.width=a.style.height=M.a[2]+'px';
+ b.style.left=M.b[0]+'px';b.style.top=M.b[1]+'px';b.style.width=b.style.height=M.b[2]+'px';
+ r.style.left=M.r[0]+'px';r.style.top=M.r[1]+'px';r.style.width=M.r[2]+'px';
+ document.getElementById('cnt').textContent=(i+1)+' / '+slides.length;
+ document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';
+ try{history.replaceState(null,'','#'+(i+1));}catch(e){}
+}
+function fit(){var k=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+k+')';}
+addEventListener('resize',fit);fit();
+var next=function(){show(cur+1);},prev=function(){show(cur-1);};
+document.getElementById('bn').onclick=next;document.getElementById('bp').onclick=prev;
+document.getElementById('bf').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();};
+addEventListener('keydown',function(e){
+ if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>-1){e.preventDefault();next();}
+ else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>-1){e.preventDefault();prev();}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='f'||e.key==='F')document.getElementById('bf').onclick();
+});
+var tx=null;addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+addEventListener('touchend',function(e){if(tx==null)return;var d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>50)(d<0?next:prev)();});
+addEventListener('click',function(e){if(e.target.closest('#ui'))return;(e.clientX>innerWidth*0.35?next:prev)();});
+var ui=document.getElementById('ui'),hid;addEventListener('mousemove',function(){ui.classList.add('show');clearTimeout(hid);hid=setTimeout(function(){ui.classList.remove('show');},2200);});
+addEventListener('touchstart',function(){ui.classList.add('show');clearTimeout(hid);hid=setTimeout(function(){ui.classList.remove('show');},2500);},{passive:true});
+
+var seg=location.pathname.split('/'),token=decodeURIComponent((seg[2]||'')).replace(/[^A-Za-z0-9_-]/g,'');
+/* /presentasi/<nama> = link tetap (selalu presentasi terbaru); /p/<kode> = salinan tertentu */
+var api=seg[1]==='presentasi'?'/api/public/presentations/alias/'+encodeURIComponent(token.toLowerCase()):'/api/public/presentations/'+encodeURIComponent(token);
+fetch(api,{cache:'no-store'})
+.then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Presentasi tidak tersedia');return j;});})
+.then(function(j){
+ document.title=j.title||'Presentasi';build(j.payload);document.getElementById('msg').remove();
+ var start=parseInt((location.hash||'').slice(1),10);show(start>0&&start<=slides.length?start-1:0);
+}).catch(function(e){document.getElementById('msg').innerHTML='<div><b style="color:#fff;font-size:18px">Presentasi tidak dapat dibuka</b><br><br>'+esc(e.message)+'</div>';});
+})();
+</script>
+</body>
+</html>
