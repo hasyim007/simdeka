@@ -1382,21 +1382,29 @@ async function lpJurnalLink(){
 
 function renderLaporanMenu(){
  lpInit();
- const sel='h-10 border border-line rounded-xl px-3 text-sm bg-white font-semibold',ks=[...new Set(kelompokList.map(k=>k.nama))];
+ const sel='h-10 border border-line rounded-xl px-3 text-sm bg-white font-semibold',rg=LP.per==='range',ks=[...new Set(kelompokList.map(k=>k.nama))];
  fmEl('content').innerHTML=`<div class="max-w-[1500px] mx-auto fade">
   <div class="mb-5"><h2 class="text-2xl font-extrabold">Laporan Pengajian Muda Mudi</h2><p class="text-sm text-slate-500 mt-1">Cetak laporan pengajian muda mudi kelompok, desa, dan daerah. Pilih periode per bulan, setahun, atau rentang tanggal, lalu cetak per jenis pengajian.</p></div>
-  <div class="bg-white rounded-2xl border border-line shadow-card p-3 sm:p-4 mb-5 flex flex-col lg:flex-row lg:items-center gap-3">
-   <div class="flex flex-wrap gap-2 flex-1">
-    <select class="${sel}" onchange="lpSet('y',this.value)" aria-label="Tahun" ${LP.per==='range'?'style="display:none"':''}>${kaYears().map(v=>`<option value="${v}" ${v===LP.y?'selected':''}>${v}</option>`).join('')}</select>
-    <div class="inline-flex h-10 rounded-xl border border-line overflow-hidden bg-white text-sm font-bold" role="group" aria-label="Jenis periode">${[['m','Per bulan'],['all','Setahun'],['range','Rentang tanggal']].map(([v,l])=>{const on=v==='range'?LP.per==='range':v==='all'?LP.per==='all':(LP.per!=='range'&&LP.per!=='all');return `<button type="button" onclick="lpMode('${v}')" class="px-3 ${on?'bg-emerald-600 text-white':'text-slate-600 hover:bg-slate-50'}">${l}</button>`;}).join('')}</div>
-    <select class="${sel}" onchange="lpSet('per',this.value)" aria-label="Bulan" ${LP.per==='range'?'style="display:none"':''}><option value="all" ${LP.per==='all'?'selected':''}>Setahun penuh</option>${FM_BLN.map((_,i)=>`<option value="${i}" ${String(i)===LP.per?'selected':''}>${kaBln(i)}</option>`).join('')}<option value="range" ${LP.per==='range'?'selected':''}>Rentang tanggal…</option></select>
-    ${kaRpDateInputs(lpRp(''),'lpSet',sel)}
-    <select class="${sel}" onchange="lpSet('k',this.value)" aria-label="Kelompok"><option value="">Semua kelompok</option>${ks.map(k=>`<option value="${esc(k)}" ${LP.k===k?'selected':''}>${esc(k)}</option>`).join('')}</select>
+  <div class="lp-panel">
+   <div class="lp-sec-wrap">
+    <div class="lp-sec">Periode &amp; kelompok</div>
+    <div class="lp-filters">
+     <label class="lp-f" ${rg?'style="display:none"':''}><span>Tahun</span><select class="${sel}" onchange="lpSet('y',this.value)" aria-label="Tahun">${kaYears().map(v=>`<option value="${v}" ${v===LP.y?'selected':''}>${v}</option>`).join('')}</select></label>
+     <div class="lp-f"><span>Jenis periode</span><div class="lp-seg" role="group" aria-label="Jenis periode">${[['m','Per bulan'],['all','Setahun'],['range','Rentang tanggal']].map(([v,l])=>{const on=v==='range'?LP.per==='range':v==='all'?LP.per==='all':(LP.per!=='range'&&LP.per!=='all');return `<button type="button" onclick="lpMode('${v}')" class="${on?'on':''}">${l}</button>`;}).join('')}</div></div>
+     <label class="lp-f" ${rg?'style="display:none"':''}><span>Bulan</span><select class="${sel}" onchange="lpSet('per',this.value)" aria-label="Bulan"><option value="all" ${LP.per==='all'?'selected':''}>Setahun penuh</option>${FM_BLN.map((_,i)=>`<option value="${i}" ${String(i)===LP.per?'selected':''}>${kaBln(i)}</option>`).join('')}<option value="range" ${LP.per==='range'?'selected':''}>Rentang tanggal…</option></select></label>
+     ${rg?`<div class="lp-f lp-range"><span>Rentang tanggal</span>${kaRpDateInputs(lpRp(''),'lpSet',sel)}</div>`:''}
+     <label class="lp-f"><span>Kelompok</span><select class="${sel}" onchange="lpSet('k',this.value)" aria-label="Kelompok"><option value="">Semua kelompok</option>${ks.map(k=>`<option value="${esc(k)}" ${LP.k===k?'selected':''}>${esc(k)}</option>`).join('')}</select></label>
+    </div>
    </div>
-   <button type="button" onclick="lpPrint('')" class="u-btn">${icon('printer','w-4 h-4')} Cetak gabungan semua jenis</button>
-   <button type="button" onclick="lpPpt('')" class="u-btn">${icon('presentation','w-4 h-4')} Unduh PPT gabungan</button>
-   <button type="button" onclick="lpJurnalPpt()" class="u-btn primary">${icon('presentation','w-4 h-4')} PPT jurnal kelompok (Morph)</button>
-   <button type="button" onclick="lpJurnalLink()" class="u-btn primary">${icon('link','w-4 h-4')} Buat link presentasi</button>
+   <div class="lp-act">
+    <div class="lp-sec">Cetak &amp; bagikan</div>
+    <div class="lp-btns">
+     <div class="lp-grp"><button type="button" onclick="lpPrint('')" class="u-btn">${icon('printer','w-4 h-4')} Cetak gabungan</button>
+      <button type="button" onclick="lpPpt('')" class="u-btn">${icon('presentation','w-4 h-4')} PPT gabungan</button></div>
+     <div class="lp-grp"><button type="button" onclick="lpJurnalPpt()" class="u-btn primary">${icon('presentation','w-4 h-4')} PPT jurnal kelompok</button>
+      <button type="button" onclick="lpJurnalLink()" class="u-btn primary">${icon('link','w-4 h-4')} Buat link presentasi</button></div>
+    </div>
+   </div>
   </div>
   <div id="lpCards" class="grid gap-4 md:grid-cols-3"></div>
  </div>`;
@@ -1708,10 +1716,13 @@ try{const m=sessionStorage.getItem('simdeka_flash');if(m){sessionStorage.removeI
 /* ===== HAPUS DATA (satu / terpilih / semua) + DATA MUDA MUDI ===== */
 const MM_STORE='simdeka_mm_';let mmCache={},curBulk='';
 function mmPut(k,a){mmCache[k]=a;try{localStorage.setItem(MM_STORE+k,JSON.stringify(a));}catch(e){showToast('Penyimpanan penuh — data tidak tersimpan');}}
+/* Jenis Dapukan Muballigh (default: Mubaligh Tugasan). Ubah daftar ini bila perlu. */
+const MB_JD=['Mubaligh Tugasan','Mubaligh Setempat'],MB_JD_DEF='Mubaligh Tugasan';
+function mbJdOf(v){const n=t=>String(t||'').toLowerCase().replace(/[^a-z]/g,''),t=n(v);if(!t)return MB_JD_DEF;return MB_JD.find(o=>n(o)===t)||MB_JD.find(o=>n(o).endsWith(t))||'';}
 function mmData(k){
  if(mmCache[k])return mmCache[k];
  if(window.ME && !['super_admin','admin_desa'].includes(window.ME.role))return [];
- try{const a=JSON.parse(localStorage.getItem(MM_STORE+k));if(Array.isArray(a)){mmCache[k]=a;return a;}}catch(e){}
+ try{const a=JSON.parse(localStorage.getItem(MM_STORE+k));if(Array.isArray(a)){if(k==='mubaligh')a.forEach(x=>{if(x&&!x.jd)x.jd=MB_JD_DEF;});mmCache[k]=a;return a;}}catch(e){}
  const a=[];mmCache[k]=a;return a;
 }
 function bulkEmpty(n){return '';}
@@ -1753,12 +1764,13 @@ function bulkDo(ids){
 function rowMM(x){
  const stc=x.st==='Menikah'?'bg-blue-50 text-blue-700':'bg-slate-100 text-slate-600', fem=x.jk==='Perempuan', u=lhUmur(x.lh);
  const sub=[x.jk,u!==''?u+' th':''].filter(Boolean).join(' • ');
- return `<tr data-open onclick="if(rowSkip(event))return;mmDetail('${x.id}')" data-id="${x.id}" data-name="${esc(x.n.toLowerCase())}" data-kelompok="${esc(x.k)}" data-st="${esc(x.st)}" data-dap="${esc(String(x.d||'').toLowerCase())}" data-cari="${esc([x.n,x.k,x.d,x.wa,x.jk].join(' ').toLowerCase())}">
+ return `<tr data-open onclick="if(rowSkip(event))return;mmDetail('${x.id}')" data-id="${x.id}" data-name="${esc(x.n.toLowerCase())}" data-kelompok="${esc(x.k)}" data-st="${esc(x.st)}" data-dap="${esc(String(x.d||'').toLowerCase())}" data-jd="${esc(String(x.jd||'').toLowerCase())}" data-cari="${esc([x.n,x.k,x.d,x.jd,x.wa,x.jk].join(' ').toLowerCase())}">
   <td class="col-chk m-chk"><input type="checkbox" class="rowChk" data-id="${x.id}" onchange="bulkChk()" aria-label="Pilih ${esc(x.n)}"></td>
   <td class="col-no"></td>
   <td class="m-main"><div class="flex items-center gap-3"><div class="min-w-0"><div class="nm truncate">${esc(x.n)}</div>${sub?`<div class="sub">${esc(sub)}</div>`:''}</div></div></td>
   <td class="nowrap">${esc(x.k)||'—'}</td>
   <td>${x.d?`<span class="inline-block px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold whitespace-nowrap">${esc(x.d)}</span>`:'<span class="text-slate-300">—</span>'}</td>
+  ${mmCurPage==='mubaligh'?`<td>${x.jd?`<span class="inline-block px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-bold whitespace-nowrap">${esc(x.jd)}</span>`:'<span class="text-slate-300">—</span>'}</td>`:''}
   <td class="nowrap">${mmWaCell(x.wa)}</td>
   <td><span class="inline-block px-2.5 py-1 rounded-full ${stc} text-[11px] font-bold whitespace-nowrap">${esc(x.st)}</span></td>
   <td class="col-act m-act"><button title="Edit" aria-label="Edit ${esc(x.n)}" onclick="mmEdit('${x.id}')" class="u-ib">${icon('pencil','w-4 h-4')}</button><button title="Hapus" aria-label="Hapus ${esc(x.n)}" onclick="bulkAsk('one','${x.id}')" class="u-ib del">${icon('trash-2','w-4 h-4')}</button></td></tr>`;
@@ -1770,7 +1782,7 @@ function mmDetail(id){
  document.getElementById('modalDesc').textContent=(x.d||'Tanpa dapukan')+' • '+(x.k||'Tanpa kelompok');
  document.getElementById('modalBody').innerHTML=`<div class="space-y-4"><div class="grid sm:grid-cols-2 gap-4">
   ${detailCard('Data diri',[['Jenis kelamin',v(x.jk)],['Tanggal lahir',v(lhTgl(x.lh))],['Umur',u!==''?u+' tahun':'—'],['Status',v(x.st)]],'user-round')}
-  ${detailCard('Kepengurusan & kontak',[['Kelompok',v(x.k)],[pg==='mubaligh'?'Sebutan':'Dapukan',v(x.d)],['No. WA',mmWaCell(x.wa)]],'users')}
+  ${detailCard('Kepengurusan & kontak',[['Kelompok',v(x.k)],[pg==='mubaligh'?'Sebutan':'Dapukan',v(x.d)]].concat(pg==='mubaligh'?[['Jenis dapukan',v(x.jd)]]:[],[['No. WA',mmWaCell(x.wa)]]),'users')}
  </div>${detailActions(`mmEdit('${esc(id)}')`,`bulkAsk('one','${esc(id)}')`)}</div>`;
  showModal(); lucide.createIcons();
 }
@@ -1785,20 +1797,22 @@ function dlXlsx(wb,nama){
  }catch(e){console.error('Gagal membuat file Excel',e);return false;}
 }
 const MM_IMP_HEAD=['No','Nama Lengkap','Kelompok','Nama Dapukan','Jenis Kelamin','Tanggal Lahir','No WA','Status'];
-const MM_IMP_ALIAS={nama:['nama lengkap','nama'],jk:['jenis kelamin','jk','l p','gender'],kel:['kelompok','asal kelompok'],dap:['nama dapukan','dapukan','jabatan'],lahir:['tanggal lahir','tgl lahir','lahir'],wa:['no wa','no whatsapp','whatsapp','wa','no hp','hp'],st:['status','status pernikahan']};
+const MB_IMP_HEAD=MM_IMP_HEAD.map(h=>h==='Nama Dapukan'?'Jenis Dapukan':h);
+const MM_IMP_ALIAS={nama:['nama lengkap','nama'],jk:['jenis kelamin','jk','l p','gender'],kel:['kelompok','asal kelompok'],dap:['nama dapukan','dapukan','jabatan'],lahir:['tanggal lahir','tgl lahir','lahir'],wa:['no wa','no whatsapp','whatsapp','wa','no hp','hp'],st:['status','status pernikahan'],jd:['jenis dapukan','jenis dapukan mubaligh']};
 let mmImp={page:'',raw:[],fname:''};
 function mmTemplate(page){
  const desa=page==='muda-mudi-desa',kel=activeGroups(),dap=dapGet();
- const rows=[MM_IMP_HEAD,['1','(Contoh) Ahmad Fauzan',kel[0]||'Kelompok A',dap[0]||'','Laki-laki','2002-05-17','081234567890','Masih Lajang']];
+ const mb=page==='mubaligh';
+ const rows=[mb?MB_IMP_HEAD:MM_IMP_HEAD,['1','(Contoh) Ahmad Fauzan',kel[0]||'Kelompok A',mb?MB_JD_DEF:(dap[0]||''),'Laki-laki','2002-05-17','081234567890','Masih Lajang']];
  const nama=page==='mubaligh'?'Template_Mubaligh':'Template_Muda_Mudi_'+(desa?'Desa':'Kelompok');
  if(!window.XLSX){fmCsv(nama,rows);showToast('Template CSV diunduh (library Excel belum termuat)');return;}
  const ws=XLSX.utils.aoa_to_sheet(rows);
  ws['!cols']=[{wch:6},{wch:28},{wch:20},{wch:26},{wch:16},{wch:16},{wch:18},{wch:16}];
  for(let r=3;r<=500;r++){ws['F'+r]={t:'s',v:'',z:'@'};ws['G'+r]={t:'s',v:'',z:'@'};}
  ws['!ref']='A1:H500';
- const pet=[['PETUNJUK PENGISIAN'],['1. Isi data mulai baris 2 pada sheet "Data", lalu hapus baris contoh.'],['2. Kolom No boleh dikosongkan (diabaikan saat impor).'],['3. Jenis Kelamin diisi Laki-laki atau Perempuan.'],['4. Kolom Kelompok harus sama persis dengan nama kelompok aktif (lihat daftar di bawah).'],['5. Nama Dapukan boleh dikosongkan atau diisi bebas (saran ada di daftar di bawah).'],['6. Tanggal Lahir ditulis YYYY-MM-DD (contoh 2002-05-17) atau DD/MM/YYYY. Boleh dikosongkan.'],['7. No WA ditulis dengan awalan 0, contoh 081234567890. Boleh dikosongkan.'],['8. Status diisi Masih Lajang atau Menikah.'],[],['Kelompok yang tersedia','Nama Dapukan yang tersedia','Jenis Kelamin','Status']];
+ const pet=[['PETUNJUK PENGISIAN'],['1. Isi data mulai baris 2 pada sheet "Data", lalu hapus baris contoh.'],['2. Kolom No boleh dikosongkan (diabaikan saat impor).'],['3. Jenis Kelamin diisi Laki-laki atau Perempuan.'],['4. Kolom Kelompok harus sama persis dengan nama kelompok aktif (lihat daftar di bawah).'],[mb?'5. Jenis Dapukan diisi sesuai daftar di bawah. Jika dikosongkan otomatis menjadi Mubaligh Tugasan. Sebutan (Mubaligh/Mubalighot) otomatis dari jenis kelamin.':'5. Nama Dapukan boleh dikosongkan atau diisi bebas (saran ada di daftar di bawah).'],['6. Tanggal Lahir ditulis YYYY-MM-DD (contoh 2002-05-17) atau DD/MM/YYYY. Boleh dikosongkan.'],['7. No WA ditulis dengan awalan 0, contoh 081234567890. Boleh dikosongkan.'],['8. Status diisi Masih Lajang atau Menikah.'],[],['Kelompok yang tersedia',mb?'Jenis Dapukan yang tersedia':'Nama Dapukan yang tersedia','Jenis Kelamin','Status']];
  const jk=['Laki-laki','Perempuan'],st=['Masih Lajang','Menikah'];
- for(let i=0;i<Math.max(kel.length,dap.length,2);i++)pet.push([kel[i]||'',dap[i]||'',jk[i]||'',st[i]||'']);
+ const dl=mb?MB_JD:dap;for(let i=0;i<Math.max(kel.length,dl.length,2);i++)pet.push([kel[i]||'',dl[i]||'',jk[i]||'',st[i]||'']);
  const w2=XLSX.utils.aoa_to_sheet(pet); w2['!cols']=[{wch:32},{wch:34},{wch:16},{wch:16}];
  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Data'); XLSX.utils.book_append_sheet(wb,w2,'Petunjuk');
  if(!dlXlsx(wb,nama)){fmCsv(nama,rows);showToast('Gagal membuat file Excel, template CSV diunduh sebagai gantinya');return;}
@@ -1837,7 +1851,7 @@ function mmImpParse(rows,fname){
  const raw=[];
  for(let r=hi+1;r<rows.length;r++){
   const g=k=>map[k]===undefined?'':String(rows[r][map[k]]==null?'':rows[r][map[k]]).trim().replace(/\s+/g,' ');
-  const x={baris:r+1,nama:normNama(g('nama')),jk:g('jk'),kel:g('kel'),dap:normNama(g('dap')),lahir:g('lahir'),wa:g('wa').replace(/[^\d+\s-]/g,'').trim(),st:g('st')};
+  const x={baris:r+1,nama:normNama(g('nama')),jk:g('jk'),kel:g('kel'),dap:normNama(g('dap')),lahir:g('lahir'),wa:g('wa').replace(/[^\d+\s-]/g,'').trim(),st:g('st'),jd:g('jd')};
   if(!x.nama&&!x.jk&&!x.kel&&!x.dap&&!x.lahir&&!x.wa&&!x.st)continue;
   if(/^\(contoh\)/i.test(x.nama))continue;
   if(/^8\d{7,}$/.test(x.wa.replace(/[\s-]/g,'')))x.wa='0'+x.wa;
@@ -1860,6 +1874,7 @@ function mmImpEval(){
   if(!ko)return err(x.kel?'Kelompok "'+x.kel+'" tidak ada / tidak aktif':'Kelompok kosong');
   r.kel=ko;
   if(x.dap.length>60)return err('Nama dapukan lebih dari 60 karakter');
+  if(mmImp.page==='mubaligh'){r.jd=mbJdOf(x.jd);if(!r.jd)return err('Jenis dapukan harus: '+MB_JD.join(' / '));}
   const sj=x.st.toLowerCase().replace(/[^a-z]/g,'');
   r.st=['masihlajang','lajang','belummenikah','belumkawin'].includes(sj)?'Masih Lajang':['menikah','sudahmenikah','kawin','sudahkawin'].includes(sj)?'Menikah':'';
   if(!r.st)return err('Status harus Masih Lajang / Menikah');
@@ -1878,7 +1893,7 @@ function mmImpShow(){
  document.getElementById('modalDesc').textContent=mmImp.fname;
  document.getElementById('modalBody').innerHTML=`<div class="space-y-4">
   <div class="grid grid-cols-3 gap-2">${chip('bg-emerald-50 text-emerald-700','Siap impor',ok)}${chip('bg-amber-50 text-amber-700','Sudah ada',dup)}${chip('bg-red-50 text-red-600','Bermasalah',er)}</div>
-  <div class="max-h-[320px] overflow-auto scrollbar border border-line rounded-xl"><table class="w-full min-w-[760px] text-left text-xs"><thead class="bg-slate-50 sticky top-0"><tr class="text-[10px] uppercase tracking-wide text-slate-400"><th class="py-2 px-3">Baris</th><th class="py-2 px-3">Nama</th><th class="py-2 px-3">JK</th><th class="py-2 px-3">Kelompok</th><th class="py-2 px-3">Dapukan</th><th class="py-2 px-3">Tgl Lahir</th><th class="py-2 px-3">No. WA</th><th class="py-2 px-3">Status</th><th class="py-2 px-3">Hasil</th></tr></thead><tbody>${L.map(r=>`<tr class="border-t border-line"><td class="py-2 px-3 text-slate-400">${r.baris}</td><td class="py-2 px-3 font-semibold">${esc(r.nama)||'—'}</td><td class="py-2 px-3">${esc(r.jk)||'—'}</td><td class="py-2 px-3">${esc(r.kel)||'—'}</td><td class="py-2 px-3">${esc(r.dap)||'—'}</td><td class="py-2 px-3">${esc(r.lahir||'')||'—'}</td><td class="py-2 px-3">${esc(r.wa)||'—'}</td><td class="py-2 px-3">${esc(r.st)||'—'}</td><td class="py-2 px-3">${badge(r)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="max-h-[320px] overflow-auto scrollbar border border-line rounded-xl"><table class="w-full min-w-[760px] text-left text-xs"><thead class="bg-slate-50 sticky top-0"><tr class="text-[10px] uppercase tracking-wide text-slate-400"><th class="py-2 px-3">Baris</th><th class="py-2 px-3">Nama</th><th class="py-2 px-3">JK</th><th class="py-2 px-3">Kelompok</th><th class="py-2 px-3">${mmImp.page==='mubaligh'?'Jenis Dapukan':'Dapukan'}</th><th class="py-2 px-3">Tgl Lahir</th><th class="py-2 px-3">No. WA</th><th class="py-2 px-3">Status</th><th class="py-2 px-3">Hasil</th></tr></thead><tbody>${L.map(r=>`<tr class="border-t border-line"><td class="py-2 px-3 text-slate-400">${r.baris}</td><td class="py-2 px-3 font-semibold">${esc(r.nama)||'—'}</td><td class="py-2 px-3">${esc(r.jk)||'—'}</td><td class="py-2 px-3">${esc(r.kel)||'—'}</td><td class="py-2 px-3">${esc(mmImp.page==='mubaligh'?r.jd:r.dap)||'—'}</td><td class="py-2 px-3">${esc(r.lahir||'')||'—'}</td><td class="py-2 px-3">${esc(r.wa)||'—'}</td><td class="py-2 px-3">${esc(r.st)||'—'}</td><td class="py-2 px-3">${badge(r)}</td></tr>`).join('')}</tbody></table></div>
   <p class="text-[11px] text-slate-400">Baris yang sudah ada atau bermasalah dilewati. Hanya baris "Siap impor" yang disimpan.</p>
   <div class="flex justify-end gap-2 pt-2 border-t border-line"><button onclick="closeModal()" class="px-4 py-2.5 rounded-xl border border-line text-sm font-bold">Batal</button><button ${ok?'':'disabled'} onclick="mmImpCommit()" class="px-5 py-2.5 rounded-xl text-sm font-bold ${ok?'bg-navy text-white':'bg-slate-100 text-slate-400 cursor-not-allowed'}">Impor ${ok} data</button></div></div>`;
  showModal();lucide.createIcons();
@@ -1886,11 +1901,11 @@ function mmImpShow(){
 function mmImpCommit(){
  const L=mmImpEval().filter(x=>x.ok==='ok'); if(!L.length)return;
  const pg=mmImp.page,D=mmData(pg); mmType=pg;
- L.forEach(r=>{mmRememberDap(r.dap);D.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:r.nama,jk:r.jk,k:r.kel,d:pg==='mubaligh'?mbSebutan(r.jk):r.dap,wa:r.wa,lh:r.lahir||'',st:r.st});});
+ L.forEach(r=>{mmRememberDap(r.dap);D.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:r.nama,jk:r.jk,k:r.kel,d:pg==='mubaligh'?mbSebutan(r.jk):r.dap,wa:r.wa,lh:r.lahir||'',st:r.st,...(pg==='mubaligh'?{jd:r.jd||MB_JD_DEF}:{})});});
  mmPut(pg,D);closeModal();renderMM(pg);showToast(L.length+' data berhasil diimpor');
 }
 function mmTableHtml(L,desa){
- return `<div id="mmTw" class="u-tw rc"><table class="dt"><thead><tr><th class="col-chk"><input type="checkbox" onchange="bulkAll(this)" title="Pilih semua" aria-label="Pilih semua"></th><th class="col-no">No</th><th>Nama</th><th>${desa?'Asal kelompok':'Kelompok'}</th><th>${mmCurPage==='mubaligh'?'Sebutan':'Dapukan'}</th><th>No. WA</th><th>Status</th><th class="col-act">Aksi</th></tr></thead><tbody id="generusTable">${L.map(rowMM).join('')}</tbody></table></div>
+ return `<div id="mmTw" class="u-tw rc"><table class="dt"><thead><tr><th class="col-chk"><input type="checkbox" onchange="bulkAll(this)" title="Pilih semua" aria-label="Pilih semua"></th><th class="col-no">No</th><th>Nama</th><th>${desa?'Asal kelompok':'Kelompok'}</th><th>${mmCurPage==='mubaligh'?'Sebutan':'Dapukan'}</th>${mmCurPage==='mubaligh'?'<th>Jenis Dapukan</th>':''}<th>No. WA</th><th>Status</th><th class="col-act">Aksi</th></tr></thead><tbody id="generusTable">${L.map(rowMM).join('')}</tbody></table></div>
  <div id="mmEmpty0" class="${L.length?'hidden':''}">${emptyState('users-round','Belum ada data','Tambahkan satu per satu, atau impor sekaligus dari Excel.',[['Tambah Data',mmAddFn(mmCurPage),'primary'],['Impor dari Excel',`mmImpPick('${mmCurPage}')`,'ghost']])}</div>
  <div id="mmEmpty1" class="hidden">${emptyState('search-x','Tidak ada data yang cocok','Coba ubah kata kunci atau atur ulang filter yang aktif.',[['Atur ulang filter','mmReset()','ghost']])}</div>`;
 }
@@ -1950,7 +1965,7 @@ function mbTop(L){
 function renderMM(page){
  if(page==='muda-mudi-kelompok')return renderMMK();
  mmCurPage=page; const L=mmData(page);
- mmUi={q:'',k:'',s:'',d:''};
+ mmUi={q:'',k:'',s:'',d:'',j:''};
  document.getElementById('content').innerHTML=`<div class="max-w-[1500px] mx-auto fade">
   ${pageHead(page==='mubaligh'?`Database Muballigh (guru pengajian). Petugas default absensi diatur lewat tombol <b>Petugas Default</b> di menu Absensi Pengajian. <span id="mmTotal" class="font-semibold text-slate-700"></span>`:`Database KMM (Kepengurusan Muda Mudi) tingkat desa. <span id="mmTotal" class="font-semibold text-slate-700"></span>`,pageActions({label:page==='mubaligh'?'Tambah Muballigh':'Tambah Data',fn:mmAddFn(page)},mmMenu(page)))}
   ${page==='muda-mudi-desa'?kmmDesaTop(L):page==='mubaligh'?mbTop(L):''}
@@ -1959,6 +1974,7 @@ function renderMM(page){
     ${uSearch('',  '',"mmFilter('q',this.value)",'Cari nama, dapukan, no. WA...')}
     ${uSel("mmFilter('k',this.value)",'Semua kelompok',kelompokList.map(k=>[k.nama,k.nama]),'')}
     ${page==='mubaligh'?uSel("mmFilter('d',this.value)",'Semua sebutan',[['Mubaligh','Mubaligh'],['Mubalighot','Mubalighot']],''):uSel("mmFilter('d',this.value)",'Semua dapukan',dapGet().map(n=>[n,n]),'')}
+    ${page==='mubaligh'?uSel("mmFilter('j',this.value)",'Semua jenis dapukan',MB_JD.map(j=>[j,j]),''):''}
     ${uSel("mmFilter('s',this.value)",'Semua status',[['Masih Lajang','Masih Lajang'],['Menikah','Menikah']],'')}
    </div>
    ${bulkBar(page)}
@@ -2169,6 +2185,7 @@ function mmEdit(id){
    <label class="block sm:col-span-2">${lb('Nama Lengkap')}<input id="me_n" maxlength="100" value="${esc(x.n)}" class="${inp}"></label>
    <label class="block">${lb(pg==='muda-mudi-kelompok'?'Kelompok':'Asal Kelompok')}<select id="me_k" class="${inp}"><option value="">Pilih Kelompok</option>${opt(kl,x.k)}</select></label>
    ${pg==='mubaligh'?`<label class="block">${lb('Sebutan')}<div class="${inp} bg-slate-50 text-slate-500">Otomatis dari jenis kelamin</div><input id="me_d" type="hidden" value=""></label>`:`<label class="block">${lb('Nama Dapukan')}<input id="me_d" maxlength="60" list="mmDapList" autocomplete="off" value="${esc(x.d||'')}" class="${inp}"></label>`}
+   ${pg==='mubaligh'?`<label class="block">${lb('Jenis Dapukan')}<select id="me_jd" class="${inp}">${opt(MB_JD.concat(x.jd&&!MB_JD.includes(x.jd)?[x.jd]:[]),x.jd||MB_JD_DEF)}</select></label>`:''}
    <label class="block">${lb('Jenis Kelamin')}<select id="me_jk" class="${inp}"><option value="">Pilih</option>${opt(['Laki-laki','Perempuan'],x.jk)}</select></label>
    <label class="block">${lb('Status')}<select id="me_st" class="${inp}"><option value="">Pilih</option>${opt(['Masih Lajang','Menikah'],x.st)}</select></label>
    <label class="block">${lb('Tanggal Lahir')}<input id="me_lh" type="date" min="1900-01-01" max="${fmIso(new Date())}" value="${esc(x.lh||'')}" class="${inp}"></label>
@@ -2182,7 +2199,7 @@ function mmEditSave(e,id){
  const g=k=>(document.getElementById('me_'+k).value||'').replace(/\s+/g,' ').trim(), er=document.getElementById('meErr'),
   bad=m=>{er.textContent=m;er.classList.remove('hidden');};
  const o={n:g('n'),k:g('k'),d:g('d'),jk:g('jk'),st:g('st'),lh:g('lh'),wa:g('wa')};
- if(pg==='mubaligh')o.d=mbSebutan(o.jk);
+ if(pg==='mubaligh'){o.d=mbSebutan(o.jk);o.jd=g('jd')||MB_JD_DEF;}
  if(!o.n)return bad('Nama wajib diisi.');
  if(!o.k)return bad('Kelompok wajib dipilih.');
  if(!o.jk||!o.st)return bad('Jenis kelamin dan status wajib dipilih.');
@@ -2190,13 +2207,13 @@ function mmEditSave(e,id){
  if(o.lh&&!lhOk(o.lh))return bad('Tanggal lahir tidak valid.');
  mmRememberDap(o.d); Object.assign(x,o); mmPut(pg,L); closeModal(); renderMM(pg); showToast('Data diperbarui');
 }
-let mmUi={q:'',k:'',s:'',d:''};
+let mmUi={q:'',k:'',s:'',d:'',j:''};
 function mmFilter(key,val){
  if(key)mmUi[key]=String(val||'');
  const q=mmUi.q.trim().toLowerCase(); let tampil=0,total=0;
  document.querySelectorAll('#generusTable tr[data-id]').forEach(tr=>{
   total++;
-  const ok=(!q||tr.dataset.cari.includes(q))&&(!mmUi.k||tr.dataset.kelompok===mmUi.k)&&(!mmUi.s||tr.dataset.st===mmUi.s)&&(!mmUi.d||tr.dataset.dap===mmUi.d.toLowerCase());
+  const ok=(!q||tr.dataset.cari.includes(q))&&(!mmUi.k||tr.dataset.kelompok===mmUi.k)&&(!mmUi.s||tr.dataset.st===mmUi.s)&&(!mmUi.d||tr.dataset.dap===mmUi.d.toLowerCase())&&(!mmUi.j||tr.dataset.jd===mmUi.j.toLowerCase());
   tr.style.display=ok?'':'none'; if(ok)tampil++;
   if(!ok){const c=tr.querySelector('.rowChk');if(c)c.checked=false;}
  });
@@ -2289,10 +2306,11 @@ function mmRowHtml(){
   jk:c=>`<label class="${c} block">${lb('Jenis Kelamin')}<select data-f="jk" class="${inp}"><option value="">Jenis Kelamin</option><option>Laki-laki</option><option>Perempuan</option></select></label>`,
   d:c=>`<label class="${c} block">${lb('Nama Dapukan')}<input type="text" data-f="d" maxlength="60" list="mmDapList" autocomplete="off" class="${inp}" placeholder="Pilih / ketik dapukan"></label>`,
   lh:c=>`<label class="${c} block">${lb('Tanggal Lahir')}<input type="date" data-f="lh" min="1900-01-01" max="${fmIso(new Date())}" class="${inp}"></label>`,
+  jd:c=>`<label class="${c} block">${lb('Jenis Dapukan')}<select data-f="jd" class="${inp}">${MB_JD.map(j=>`<option ${j===MB_JD_DEF?'selected':''}>${esc(j)}</option>`).join('')}</select></label>`,
   wa:c=>`<label class="${c} block">${lb('No. WA')}<input type="tel" inputmode="tel" data-f="wa" maxlength="20" autocomplete="off" class="${inp}" placeholder="08xxxxxxxxxx"></label>`,
   st:c=>`<label class="${c} block">${lb('Status')}<select data-f="st" class="${inp}"><option value="">Status</option><option>Menikah</option><option>Masih Lajang</option></select></label>`};
  const del=`<button type="button" title="Hapus baris" onclick="mmDelRow(this)" class="sm:col-span-1 h-[42px] self-end rounded-xl hover:bg-red-50 text-red-500 grid place-items-center justify-self-end sm:justify-self-center">${icon('trash-2','w-4 h-4')}</button>`;
- if(mmType==='mubaligh')return `<div class="mmRow grid sm:grid-cols-12 gap-2 rounded-2xl border border-line p-3">${F.n('sm:col-span-4')}${F.k('sm:col-span-3')}${F.jk('sm:col-span-2')}${F.st('sm:col-span-2')}${del}${F.wa('sm:col-span-6')}${F.lh('sm:col-span-5')}</div>`;
+ if(mmType==='mubaligh')return `<div class="mmRow grid sm:grid-cols-12 gap-2 rounded-2xl border border-line p-3">${F.n('sm:col-span-4')}${F.k('sm:col-span-3')}${F.jk('sm:col-span-2')}${F.st('sm:col-span-2')}${del}${F.jd('sm:col-span-4')}${F.wa('sm:col-span-4')}${F.lh('sm:col-span-4')}</div>`;
  if(mmDesa())return `<div class="mmRow grid sm:grid-cols-12 gap-2 rounded-2xl border border-line p-3">${F.n('sm:col-span-4')}${F.k('sm:col-span-3')}${F.jk('sm:col-span-2')}${F.st('sm:col-span-2')}${del}${F.d('sm:col-span-4')}${F.wa('sm:col-span-4')}${F.lh('sm:col-span-4')}</div>`;
  return `<div class="mmRow grid sm:grid-cols-12 gap-2 rounded-2xl border border-line p-3">${F.n('sm:col-span-5')}${F.jk('sm:col-span-3')}${F.st('sm:col-span-3')}${del}${F.d('sm:col-span-4')}${F.wa('sm:col-span-4')}${F.lh('sm:col-span-4')}</div>`;
 }
@@ -2313,7 +2331,7 @@ function openMmModal(type){
   <div><div class="flex items-center justify-between mb-2"><div class="text-xs font-bold text-slate-600">Daftar nama <span id="mmCnt" class="font-normal text-slate-400"></span></div>
    <button type="button" onclick="mmAddRow()" class="h-8 px-3 rounded-lg border border-line text-xs font-bold text-navy flex items-center gap-1.5">${icon('plus','w-3.5 h-3.5')} Tambah nama</button></div>
    ${mmHeadHtml()}<div id="mmRows" class="space-y-2 mt-1 max-h-[46vh] overflow-y-auto pr-1">${mmRowHtml()}</div>
-   <p class="text-[11px] text-slate-400 mt-2">${mmType==='mubaligh'?'Sebutan otomatis: Mubaligh untuk laki-laki dan Mubalighot untuk perempuan. Baris yang kosong diabaikan.':'Nama Dapukan boleh dipilih dari saran (Ketua Muda Mudi, Wakil Ketua Muda Mudi, Penerobos Muda Mudi, Keputrian Kelompok) atau diketik manual. Baris yang kosong diabaikan.'}</p></div>
+   <p class="text-[11px] text-slate-400 mt-2">${mmType==='mubaligh'?'Sebutan otomatis: Mubaligh untuk laki-laki dan Mubalighot untuk perempuan. Jenis Dapukan default Mubaligh Tugasan. Baris yang kosong diabaikan.':'Nama Dapukan boleh dipilih dari saran (Ketua Muda Mudi, Wakil Ketua Muda Mudi, Penerobos Muda Mudi, Keputrian Kelompok) atau diketik manual. Baris yang kosong diabaikan.'}</p></div>
   <p id="mmErr" class="text-xs font-semibold text-red-600 hidden"></p>
   <div class="flex justify-end gap-2 pt-2 border-t border-line"><button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl border border-line text-sm font-bold">Batal</button><button class="px-5 py-2.5 rounded-xl bg-navy text-white text-sm font-bold">${icon('save','w-4 inline mr-1')} Simpan Data</button></div></form>`;
  showModal();lucide.createIcons();mmCount();
@@ -2321,13 +2339,13 @@ function openMmModal(type){
 function mmSave(e){
  e.preventDefault();const desa=mmDesa(),er=document.getElementById('mmErr'),bad=m=>{er.textContent=m;er.classList.remove('hidden');};
  const kel=desa?'':document.getElementById('mmKel').value;if(!desa&&!kel)return bad('Pilih kelompok terlebih dahulu.');
- const rows=[...document.querySelectorAll('#mmRows .mmRow')].map(r=>{const g=k=>{const el=r.querySelector('[data-f="'+k+'"]');return el?(el.value||'').replace(/\s+/g,' ').trim():'';};return {n:g('n'),k:g('k'),jk:g('jk'),d:g('d'),wa:g('wa'),lh:g('lh'),st:g('st')};}).filter(x=>x.n||x.k||x.jk||x.d||x.wa||x.lh||x.st);
+ const rows=[...document.querySelectorAll('#mmRows .mmRow')].map(r=>{const g=k=>{const el=r.querySelector('[data-f="'+k+'"]');return el?(el.value||'').replace(/\s+/g,' ').trim():'';};return {n:g('n'),k:g('k'),jk:g('jk'),d:g('d'),jd:g('jd'),wa:g('wa'),lh:g('lh'),st:g('st')};}).filter(x=>x.n||x.k||x.jk||x.d||x.wa||x.lh||x.st);
  if(!rows.length)return bad('Isi minimal satu nama.');
  const i=rows.findIndex(x=>!x.n||!x.jk||!x.st||(desa&&!x.k));if(i>=0)return bad('Baris ke-'+(i+1)+': nama, '+(desa?'asal kelompok, ':'')+'jenis kelamin, dan status wajib diisi.');
  const w=rows.findIndex(x=>x.wa&&!mmWaNorm(x.wa));if(w>=0)return bad('Baris ke-'+(w+1)+': nomor WA tidak valid. Contoh: 081234567890.');
  const lt=rows.findIndex(x=>x.lh&&!lhOk(x.lh));if(lt>=0)return bad('Baris ke-'+(lt+1)+': tanggal lahir tidak valid.');
  rows.forEach(x=>mmRememberDap(x.d));
- const L=mmData(mmType);rows.forEach(x=>L.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:x.n,jk:x.jk,k:desa?x.k:kel,d:mmType==='mubaligh'?mbSebutan(x.jk):x.d,wa:x.wa,lh:x.lh,st:x.st}));mmPut(mmType,L);
+ const L=mmData(mmType);rows.forEach(x=>L.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:x.n,jk:x.jk,k:desa?x.k:kel,d:mmType==='mubaligh'?mbSebutan(x.jk):x.d,wa:x.wa,lh:x.lh,st:x.st,...(mmType==='mubaligh'?{jd:x.jd||MB_JD_DEF}:{})}));mmPut(mmType,L);
  closeModal();renderMM(mmType);showToast(rows.length+' data '+(desa?'':kel+' ')+'berhasil disimpan');
 }
 function mmPickDap(b){const i=document.getElementById('mmDapukan');i.value=b.dataset.v;i.focus();}
@@ -4308,7 +4326,7 @@ function pfRowsHtml(){
  return rows.map(x=>{const kk=fmKey(x.p.n,x.p.k),cur=pf.marks[kk],lk=mp[kk];
   return `<div id="pr_${x.i}" class="pf-row flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 px-4 sm:px-5 py-3 border-b border-[#eee] last:border-0">
    <div class="flex-1 min-w-0 flex items-center gap-3"><span class="pf-no">${ord[x.i]}</span><div class="min-w-0"><div class="text-sm font-bold break-words">${esc(x.p.n)}</div><div class="text-[11px] text-slate-500 break-words">${esc(x.p.d)}</div></div></div>
-   <div class="flex gap-1.5 shrink-0">${lk?pfLockBadge(lk):[['H','h','Hadir'],['I','i','Izin'],['A','a','Alpa']].map(s=>`<label class="pf-pill"><input type="radio" name="m_${x.i}" value="${s[0]}" ${cur===s[0]?'checked':''} onchange="pfMark(${x.i},'${s[0]}')"><span class="${s[1]}">${s[2]}</span></label>`).join('')}</div></div>`;}).join('');
+   <div class="pf-marks">${lk?pfLockBadge(lk):[['H','h','Hadir'],['I','i','Izin'],['A','a','Alpa']].map(s=>`<label class="pf-pill"><input type="radio" name="m_${x.i}" value="${s[0]}" ${cur===s[0]?'checked':''} onchange="pfMark(${x.i},'${s[0]}')"><span class="${s[1]}">${s[2]}</span></label>`).join('')}</div></div>`;}).join('');
 }
 
 /* ---------- Form Absensi: diisi langsung peserta ---------- */
@@ -4617,7 +4635,7 @@ new MutationObserver(dedupHead).observe(document.getElementById('content'),{chil
 lucide.createIcons();
 
 /* =====================================================================
-   LINK UPDATE DATA — Generus, KMM Desa, KMM Kelompok
+   LINK UPDATE DATA — Generus, KMM Desa, KMM Kelompok, Muballigh
    Tautan update menggunakan kode pendek tersimpan di server. Isian orang
    kembali ke admin lewat Kode Tanggapan (SDU1.) atau UP_SYNC_URL bila ada server.
    ===================================================================== */
@@ -4626,11 +4644,14 @@ const UP_MODES=[['kunci','Terkunci'],['langsung','Langsung berlaku'],['setuju','
 const UP_JK=['Laki-laki','Perempuan'],UP_MST=['Masih Lajang','Menikah'];
 const UP_MMF=[['n','Nama Lengkap','text'],['k','Kelompok','kel'],['d','Nama Dapukan','text'],['jk','Jenis Kelamin','sel',UP_JK],['lh','Tanggal Lahir','date'],['wa','No. WA','tel'],['st','Status','sel',UP_MST]];
 const UP_MMV=[['lh','Tanggal lahir'],['wa','4 digit terakhir no. WA']];
+const UP_MBF=UP_MMF.filter(f=>f[0]!=='d');UP_MBF.splice(2,0,['jd','Jenis Dapukan','sel',MB_JD,MB_JD_DEF]); /* Muballigh: sebutan (Mubaligh/Mubalighot) otomatis dari jenis kelamin */
 const UP={
  'generus':{t:'Database Generus',n:'nama',k:'kelompok',vk:[['tgl','Tanggal lahir']],F:[['nama','Nama Lengkap','text'],['kelompok','Kelompok','kel'],['jk','Jenis Kelamin','sel',UP_JK],['tempat','Tempat Lahir','text'],['tgl','Tanggal Lahir','date'],['status','Status','sel',GEN_ST],['pend','Pendidikan Terakhir','sel',GEN_PEND],['smp','SMP','text'],['sma','SMA/SMK','text'],['univ','Universitas','text'],['kelas','Status Kelas Pendidikan','text'],['kerja','Pekerjaan','text'],['ayah','Nama Ayah','text'],['ayahSt','Status Ayah','sel',GEN_ORTU],['ibu','Nama Ibu','text'],['ibuSt','Status Ibu','sel',GEN_ORTU]]},
  'muda-mudi-desa':{t:'KMM Desa',n:'n',k:'k',vk:UP_MMV,F:UP_MMF},
- 'muda-mudi-kelompok':{t:'KMM Kelompok',n:'n',k:'k',vk:UP_MMV,F:UP_MMF}
+ 'muda-mudi-kelompok':{t:'KMM Kelompok',n:'n',k:'k',vk:UP_MMV,F:UP_MMF},
+ 'mubaligh':{t:'Muballigh',n:'n',k:'k',vk:UP_MMV,F:UP_MBF}
 };
+function upFix(p,x){if(p==='mubaligh'&&x){x.d=mbSebutan(x.jk);if(!x.jd)x.jd=MB_JD_DEF;}}
 const upJ=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
 const upW=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){showToast('Penyimpanan penuh — data tidak tersimpan');}};
 function upH(s){let h=2166136261;s='sdk|'+s;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
@@ -4648,7 +4669,7 @@ function upClean(f,v){v=String(v==null?'':v).replace(/\s+/g,' ').trim().slice(0,
  if(t==='tel')return v&&mmWaNorm(v)?v:'';
  if(t==='sel')return !v||f[3].includes(v)?v:'';
  return v;}
-const UP_SLUG={'generus':'generus','muda-mudi-desa':'kmm-desa','muda-mudi-kelompok':'kmm-kelompok'};
+const UP_SLUG={'generus':'generus','muda-mudi-desa':'kmm-desa','muda-mudi-kelompok':'kmm-kelompok','mubaligh':'muballigh'};
 const upSlugify=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
 async function upLink(p,kel){
  const c=upCfg(p),U=UP[p],vis=U.F.map(f=>f[0]).filter(k=>c.m[k]!=='sembunyi');
@@ -4663,9 +4684,34 @@ async function upLink(p,kel){
 /* ---------- Halaman publik ---------- */
 let U_={};
 function upQ(){const h=location.hash.split('?')[1];return new URLSearchParams(location.search||(h?'?'+h:''));}
-function upRoute(){const mm=/^\/(generus|kmm-desa|kmm-kelompok)\/update\/?$/.exec(location.protocol==='file:'?location.hash.slice(1).split('?')[0]:location.pathname);if(mm){const k=upQ().get('kelompok');return 's-'+mm[1]+(k?'--'+upSlugify(k):'');}
+function upRoute(){const mm=/^\/(generus|kmm-desa|kmm-kelompok|muballigh)\/update\/?$/.exec(location.protocol==='file:'?location.hash.slice(1).split('?')[0]:location.pathname);if(mm){const k=upQ().get('kelompok');return 's-'+mm[1]+(k?'--'+upSlugify(k):'');}
  const p=/^\/u\/([a-z0-9]{6,20})\/?$/.exec(location.pathname);if(p)return 's-'+p[1];const m=/^#\/u\/(?:[a-z0-9-]+\.)?([A-Za-z0-9_-]+)$/.exec(location.hash);return m?m[1]:null;}
-function upShell(inner){return `<div class="min-h-full py-6 px-3 bg-slate-50"><div class="mx-auto max-w-[520px] bg-white border border-line rounded-2xl p-5 sm:p-6">${inner}</div><p class="text-center text-[11px] text-slate-400 mt-4">SIMDEKA • Sistem Informasi dan Manajemen Data Desa Karangmojo</p></div>`;}
+const UPX_SVG={
+ user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+ shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
+ edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+ check:'<path d="M20 6 9 17l-5-5"/>',
+ clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+ lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'};
+const upxI=(n,c)=>`<svg class="${c||'upx-i'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${UPX_SVG[n]||''}</svg>`;
+/* Langkah-langkah alur: Pilih nama → (Verifikasi) → Isi data → Selesai */
+function upSteps(){
+ const d=U_.d,needV=(U_.who!=null&&U_.who>=0)?!!(d.L[U_.who]&&d.L[U_.who][1]):U_.who===-1?false:true;
+ const L=['Pilih nama'].concat(needV?['Verifikasi']:[],['Isi data','Selesai']);
+ const key={pilih:'Pilih nama',verif:'Verifikasi',form:'Isi data',done:'Selesai'}[U_.st]||'Selesai';
+ return {L,cur:Math.max(0,L.indexOf(key))};
+}
+function upStepper(){
+ const S=upSteps();
+ return `<ol class="upx-steps" aria-label="Langkah pengisian">${S.L.map((t,i)=>`<li class="${i<S.cur?'done':i===S.cur?'on':''}"${i===S.cur?' aria-current="step"':''}><span class="upx-dot">${i<S.cur?upxI('check','upx-i sm'):i+1}</span><span class="upx-lab">${t}</span></li>`).join('')}</ol>`;
+}
+function upShell(inner,hero){
+ const d=U_.d,F=d&&UP[d.p];
+ const head=hero?`<div class="upx-hero"><div class="upx-brand"><img src="/img/logo.webp" alt="" width="34" height="34" onerror="this.style.display='none'"><span>SIMDEKA</span></div>
+  <h1>${hero.t}</h1><p>${hero.s}</p></div>`:`<div class="upx-hero"><div class="upx-brand"><span>SIMDEKA</span></div></div>`;
+ return `<div class="upx-page">${head}<div class="upx-card">${hero?upStepper():''}<div class="upx-body">${inner}</div></div>
+  <p class="upx-foot">SIMDEKA • Sistem Informasi dan Manajemen Data Desa Karangmojo</p></div>`;
+}
 async function upBoot(s){
  fmEl('loginScreen').classList.add('hidden');fmEl('app').classList.add('hidden');
  const r=fmEl('publicForm');r.classList.remove('hidden');
@@ -4676,47 +4722,56 @@ async function upBoot(s){
   if(!d||!UP[d.p]||!Array.isArray(d.L))throw 0;U_={d,st:'pilih',q:'',who:null};{const kq=upQ().get('kelompok');if(kq)U_.kel=kq;}document.title='Update data — SIMDEKA';upRender();
  }catch(e){r.innerHTML=upShell('<h1 class="text-lg font-extrabold">Tautan tidak dapat dibuka</h1><p class="text-sm text-slate-500 mt-2">Link mungkin sudah dimatikan atau server belum diperbarui. Minta pengurus membuat link baru.</p>');}
 }
-function upIn(f,val,dis,kl){const k=f[0],t=f[2],a=`id="upf_${k}" ${dis?'disabled':''} class="h-11 w-full border border-line rounded-xl px-3 text-sm ${dis?'bg-slate-100 text-slate-500':'bg-white'}"`;
+function upIn(f,val,dis,kl){const k=f[0],t=f[2],a=`id="upf_${k}" ${dis?'disabled':''} class="upx-in"`;
  if(t==='sel'||t==='kel'){const L=t==='kel'?kl:f[3],A=val&&!L.includes(val)?[val].concat(L):L;return `<select ${a}><option value="">Pilih</option>${A.map(x=>`<option ${x===val?'selected':''}>${esc(x)}</option>`).join('')}</select>`;}
  return `<input ${a} type="${t==='date'?'date':t==='tel'?'tel':'text'}" maxlength="120" value="${esc(val)}">`;}
 function upRender(){
- const d=U_.d,F=UP[d.p],r=fmEl('publicForm'),btn='h-11 px-5 rounded-xl text-sm font-bold bg-navy text-white';let h='';
+ const d=U_.d,F=UP[d.p],r=fmEl('publicForm'),btn='upx-btn primary',ghost='upx-btn ghost';let h='',hero;
+ const who=U_.who>=0&&d.L[U_.who]?esc(d.L[U_.who][2][F.n]||''):'';
  if(U_.st==='pilih'){
-  h=`<h1 class="text-xl font-extrabold">Update data ${esc(F.t)}</h1><p class="text-sm text-slate-500 mt-2">Silakan update data Anda. Pilih nama Anda dari daftar di bawah.</p>
+  hero={t:'Update data '+esc(F.t),s:'Perbarui data Anda agar database tetap akurat. Hanya butuh sekitar satu menit.'};
+  h=`<h2 class="upx-h">Siapa Anda?</h2><p class="upx-sub">Pilih kelompok, lalu pilih nama Anda dari daftar.</p>
   ${upPilih(d,F)}
-  ${d.nb?'<button onclick="upNew()" class="mt-4 text-sm font-bold text-navy underline">Nama saya belum ada di daftar</button>':''}`;
+  ${d.nb?'<button onclick="upNew()" class="upx-link">Nama saya belum ada di daftar</button>':''}
+  <div class="upx-how"><div class="upx-how-t">Alurnya mudah</div>
+   <div class="upx-how-i">${upxI('user','upx-i')}<div><b>Pilih nama</b><span>Temukan nama Anda di daftar kelompok.</span></div></div>
+   <div class="upx-how-i">${upxI('shield','upx-i')}<div><b>Verifikasi singkat</b><span>Memastikan data hanya diubah oleh yang bersangkutan.</span></div></div>
+   <div class="upx-how-i">${upxI('edit','upx-i')}<div><b>Periksa dan kirim</b><span>Ubah bagian yang perlu, lalu kirim.</span></div></div></div>`;
  }else if(U_.st==='verif'){
   const dt=d.vk!=='wa'&&d.vk!=='hp';
-  h=`<h1 class="text-xl font-extrabold">Verifikasi</h1><p class="text-sm text-slate-500 mt-2">Masukkan ${dt?'tanggal lahir':'4 digit terakhir no. WA'} yang terdaftar atas nama <b>${esc(d.L[U_.who][2][F.n]||'')}</b>.</p>
-  <input id="upVk" ${dt?'type="date"':'type="tel" inputmode="numeric" maxlength="4" placeholder="1234"'} class="mt-4 h-11 w-full border border-line rounded-xl px-3 text-sm">
-  <p id="upErr" class="hidden mt-3 text-xs font-semibold text-red-600"></p>
-  <div class="flex gap-2 mt-4"><button onclick="U_.st='pilih';upRender()" class="h-11 px-5 rounded-xl text-sm font-bold border border-line">Kembali</button><button onclick="upVerif()" class="${btn}">Lanjut</button></div>`;
+  hero={t:'Verifikasi identitas',s:'Satu langkah singkat sebelum data dibuka.'};
+  h=`<div class="upx-who"><span class="upx-av">${upxI('user','upx-i')}</span><div><div class="upx-who-n">${who}</div><div class="upx-who-s">${esc(U_.kel||'')}</div></div></div>
+  <h2 class="upx-h">${dt?'Tanggal lahir':'4 digit terakhir no. WA'}</h2><p class="upx-sub">Masukkan ${dt?'tanggal lahir':'4 digit terakhir no. WA'} yang terdaftar atas nama ini.</p>
+  <input id="upVk" ${dt?'type="date"':'type="tel" inputmode="numeric" maxlength="4" placeholder="• • • •"'} class="upx-in ${dt?'':'upx-pin'}">
+  <p id="upErr" class="upx-err hidden"></p>
+  <div class="upx-act"><button onclick="U_.st='pilih';upRender()" class="${ghost}">Kembali</button><button onclick="upVerif()" class="${btn}">Lanjut</button></div>`;
  }else if(U_.st==='form'){
   const row=U_.who>=0?d.L[U_.who]:null,o=row?row[2]:(U_.kel?{[F.k]:U_.kel}:{});
+  hero={t:row?'Periksa data Anda':'Pendaftaran baru',s:row?'Ubah bagian yang perlu, lalu kirim.':'Isi data Anda dengan lengkap.'};
   const rows=F.F.map(f0=>{const f=upF(d,f0);const m=d.m[f[0]];if(m==='sembunyi')return '';const dis=row&&m==='kunci';
-   return `<label class="block"><span class="text-xs font-bold text-slate-600">${f[1]}</span><div class="mt-1">${upIn(f,o[f[0]]||'',dis,d.kl)}</div>${dis?'<span class="text-[11px] text-slate-400">Hanya admin yang dapat mengubah.</span>':row&&m==='setuju'?'<span class="text-[11px] text-slate-400">Perubahan menunggu persetujuan pengurus.</span>':''}</label>`;}).join('');
-  h=`<h1 class="text-xl font-extrabold">${row?'Update data':'Pendaftaran baru'}</h1><p class="text-sm text-slate-500 mt-2">${row?'Periksa data Anda, ubah yang perlu, lalu kirim.':'Isi data Anda dengan lengkap. Data diperiksa pengurus sebelum masuk database.'}</p>
-  <div class="mt-4 space-y-3">${rows}</div><p id="upErr" class="hidden mt-3 text-xs font-semibold text-red-600"></p>
-  <div class="flex gap-2 mt-5"><button onclick="U_.st='pilih';upRender()" class="h-11 px-5 rounded-xl text-sm font-bold border border-line">Kembali</button><button onclick="upSubmit()" class="${btn}">Kirim data</button></div>`;
+   return `<label class="upx-fld"><span class="upx-fl">${f[1]}${dis?upxI('lock','upx-i sm mute'):''}</span>${upIn(f,o[f[0]]||f[4]||'',dis,d.kl)}${dis?'<span class="upx-hint">Hanya admin yang dapat mengubah.</span>':''}</label>`;}).join('');
+  h=(who?`<div class="upx-who"><span class="upx-av">${upxI('user','upx-i')}</span><div><div class="upx-who-n">${who}</div><div class="upx-who-s">${esc(U_.kel||'')}</div></div></div>`:'')+`<div class="upx-grid">${rows}</div><p id="upErr" class="upx-err hidden"></p>
+  <div class="upx-act"><button onclick="U_.st='pilih';upRender()" class="${ghost}">Kembali</button><button onclick="upSubmit()" class="${btn}">Kirim data</button></div>`;
  }else{
-  h=U_.sent?`<h1 class="text-xl font-extrabold">Data terkirim</h1><p class="text-sm text-slate-500 mt-2">Terima kasih. Data Anda sudah diterima dan menunggu persetujuan pengurus. Tidak ada yang perlu dikirim lagi.</p>
-  `:`<h1 class="text-xl font-extrabold">Data belum terkirim otomatis</h1><p class="text-sm text-slate-500 mt-2">${U_.d.sy?'Server sedang tidak dapat dihubungi. ':''}Kirim kode di bawah ini ke pengurus agar data Anda diproses.</p>
-  <textarea readonly onclick="this.select()" class="mt-4 w-full h-24 border border-line rounded-xl p-2 text-[11px] break-all">${esc(U_.code)}</textarea>
-  <div class="flex flex-wrap gap-2 mt-3"><button onclick="fmCopyText(U_.code,'Kode disalin')" class="${btn}">Salin kode</button><a onclick="this.href='https://wa.me/?text='+encodeURIComponent('Kode update data SIMDEKA:\\n'+U_.code)" target="_blank" rel="noopener" class="h-11 px-5 rounded-xl text-sm font-bold border border-line grid place-items-center">Kirim lewat WhatsApp</a></div>
-  `;
-  h+=`
-  <button onclick="U_.st='pilih';upRender()" class="mt-4 text-sm font-bold text-navy underline">Isi untuk orang lain</button>`;
+  hero=null;
+  h=U_.sent?`<div class="upx-done"><span class="upx-ok">${upxI('check','upx-i lg')}</span><h2>Data terkirim</h2><p>Terima kasih. Data Anda sudah diterima dan menunggu persetujuan pengurus. Tidak ada yang perlu dikirim lagi.</p>
+  <button onclick="U_.st='pilih';upRender()" class="${ghost}">Isi untuk orang lain</button></div>`
+  :`<div class="upx-done warn"><span class="upx-ok">${upxI('clock','upx-i lg')}</span><h2>Data belum terkirim otomatis</h2><p>${U_.d.sy?'Server sedang tidak dapat dihubungi. ':''}Kirim kode di bawah ini ke pengurus agar data Anda diproses.</p></div>
+  <textarea readonly onclick="this.select()" class="upx-code">${esc(U_.code)}</textarea>
+  <div class="upx-act"><button onclick="fmCopyText(U_.code,'Kode disalin')" class="${btn}">Salin kode</button><a onclick="this.href='https://wa.me/?text='+encodeURIComponent('Kode update data SIMDEKA:\\n'+U_.code)" target="_blank" rel="noopener" class="${ghost}">Kirim lewat WhatsApp</a></div>
+  <button onclick="U_.st='pilih';upRender()" class="upx-link">Isi untuk orang lain</button>`;
+  hero={t:U_.sent?'Selesai':'Satu langkah lagi',s:U_.sent?'Terima kasih sudah memperbarui data.':'Kirim kode agar data Anda diproses.'};
  }
- r.innerHTML=upShell(h);r.scrollTop=0;
+ r.innerHTML=upShell(h,hero);r.scrollTop=0;
 }
 function upPilih(d,F){
- const sel='mt-1 h-11 w-full bg-white border border-line rounded-xl px-3 text-sm',g=d.p==='generus',cmp=(x,y)=>String(x||'').localeCompare(String(y||''),'id',{sensitivity:'base'});
+ const sel='upx-in',g=d.p==='generus',cmp=(x,y)=>String(x||'').localeCompare(String(y||''),'id',{sensitivity:'base'});
  const ks=[...new Set(d.L.map(r=>r[2][F.k]).filter(Boolean).concat(Array.isArray(d.kl)?d.kl:[]))].sort(cmp);
  if(ks.length===1)U_.kel=ks[0];
- const kh=ks.length>1?`<label class="block mt-4"><span class="text-xs font-bold text-slate-600">Kelompok</span><select id="upKel" onchange="U_.kel=this.value;upRender()" class="${sel}"><option value="">Pilih kelompok</option>${ks.map(k=>`<option ${k===U_.kel?'selected':''}>${esc(k)}</option>`).join('')}</select></label>`:'';
+ const kh=ks.length>1?`<label class="upx-fld"><span class="upx-fl">Kelompok</span><select id="upKel" onchange="U_.kel=this.value;upRender()" class="${sel}"><option value="">Pilih kelompok</option>${ks.map(k=>`<option ${k===U_.kel?'selected':''}>${esc(k)}</option>`).join('')}</select></label>`:'';
  if(ks.length>1&&!U_.kel)return kh;
  const A=d.L.map((r,i)=>[r,i]).filter(x=>x[0][2][F.k]===U_.kel).sort((x,y)=>cmp(x[0][2][F.n],y[0][2][F.n]));
- return kh+`<label class="block mt-4"><span class="text-xs font-bold text-slate-600">Nama Anda</span><select id="upSel" onchange="if(this.value!=='')upPick(+this.value)" class="${sel}"><option value="">Pilih nama Anda</option>${A.map(x=>`<option value="${x[1]}">${esc(x[0][2][F.n]||'')}</option>`).join('')}</select></label>`;
+ return kh+`<label class="upx-fld"><span class="upx-fl">Nama Anda</span><select id="upSel" onchange="if(this.value!=='')upPick(+this.value)" class="${sel}"><option value="">Pilih nama Anda</option>${A.map(x=>`<option value="${x[1]}">${esc(x[0][2][F.n]||'')}</option>`).join('')}</select></label>`;
 }
 function upPick(i){U_.who=i;U_.st=U_.d.L[i][1]?'verif':'form';upRender();}
 function upNew(){U_.who=-1;U_.st='form';upRender();}
@@ -4808,9 +4863,9 @@ async function upIngestRecs(recs){
    for(const [k,v] of Object.entries(r.ch||{})){const f=U.F.find(a=>a[0]===k);if(!f||!Array.isArray(v))continue;const m=c.m[k],raw=String(v[1]==null?'':v[1]).trim(),n=upClean(f,raw);
     if(raw&&!n)continue;
     if(m==='langsung'){upLog(r.p,x[U.n],k,x[k]||'',n,'langsung');x[k]=n;did++;}else if(m==='setuju')ch[k]=[x[k]||'',n];}
-   if(did){upCommit(r.p);st.auto+=did;}
+   if(did){upFix(r.p,x);upCommit(r.p);st.auto+=did;}
    if(Object.keys(ch).length){Q.push({i:r.i,p:r.p,k:'u',id:r.id,ch,t:r.t});st.que++;}
-  }else if(r.k==='n'&&c.nb){const f={};U.F.forEach(a=>{f[a[0]]=upClean(a,(r.f||{})[a[0]]);});if(!f[U.n]||!f[U.k]){st.bad++;continue;}Q.push({i:r.i,p:r.p,k:'n',f,t:r.t});st.que++;}
+  }else if(r.k==='n'&&c.nb){const f={};U.F.forEach(a=>{f[a[0]]=upClean(a,(r.f||{})[a[0]]);});if(!f[U.n]||!f[U.k]){st.bad++;continue;}if(r.p==='mubaligh'&&!f.jd)f.jd=MB_JD_DEF;Q.push({i:r.i,p:r.p,k:'n',f,t:r.t});st.que++;}
   else{st.bad++;continue;}
   seen.push(r.i);
  }catch(e){st.bad++;}}
@@ -4854,9 +4909,9 @@ async function upTesSync(p){
 }
 function upDecide(i,ok){const Q=upJ(UP_QUE,[]),j=Q.findIndex(q=>q.i===i);if(j<0)return;const q=Q[j],U=UP[q.p],L=upList(q.p);let nm='';
  if(q.k==='u'){const x=L.find(a=>a.id===q.id);nm=x?x[U.n]:'';
-  if(ok&&x){Object.entries(q.ch).forEach(([k,v])=>{upLog(q.p,nm,k,v[0],v[1],'disetujui');x[k]=v[1];});upCommit(q.p);}}
+  if(ok&&x){Object.entries(q.ch).forEach(([k,v])=>{upLog(q.p,nm,k,v[0],v[1],'disetujui');x[k]=v[1];});upFix(q.p,x);upCommit(q.p);}}
  else{nm=q.f[U.n];
-  if(ok){if(q.p==='generus')L.push(genClean(Object.assign({id:genNextId()},q.f)));else L.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:q.f.n,jk:q.f.jk,k:q.f.k,d:q.f.d,wa:q.f.wa,lh:q.f.lh,st:q.f.st});
+  if(ok){if(q.p==='generus')L.push(genClean(Object.assign({id:genNextId()},q.f)));else L.push({id:'M'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:q.f.n,jk:q.f.jk,k:q.f.k,d:q.f.d,wa:q.f.wa,lh:q.f.lh,st:q.f.st,jd:q.f.jd});upFix(q.p,L[L.length-1]);
    upCommit(q.p);upLog(q.p,nm,U.n,'','(data baru)','disetujui');}}
  if(!ok)upLog(q.p,nm,q.k==='u'?Object.keys(q.ch)[0]:U.n,'','','ditolak');
  Q.splice(j,1);upW(UP_QUE,Q);showToast(ok?'Usulan disetujui':'Usulan ditolak');upRefresh(q.p);upOpenInbox(q.p);}

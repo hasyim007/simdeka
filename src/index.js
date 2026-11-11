@@ -5,7 +5,7 @@
  *   /login/   → halaman masuk
  *   /admin/   → aplikasi pengelola (hanya bisa dibuka setelah login)
  *   /f/…      → form & absensi publik (tautan yang dibagikan)
- *   /u/…      → tautan update data (generus / KMM)
+ *   /u/…      → tautan update data (generus / KMM / muballigh)
  *   /r/…      → laporan kehadiran publik
  */
 
@@ -709,7 +709,7 @@ function pageFor(pathname) {
   if (/^\/r(\/|$)/.test(pathname)) return '/r/';
   if (/^\/p(\/|$)/.test(pathname)) return '/p/';
   if (/^\/presentasi(\/|$)/.test(pathname)) return '/p/';
-  if (/^\/(generus|kmm-desa|kmm-kelompok)\/update\/?$/.test(pathname)) return '/u/';
+  if (/^\/(generus|kmm-desa|kmm-kelompok|muballigh)\/update\/?$/.test(pathname)) return '/u/';
   if (/^\/(kelompok|desa|daerah)\/[a-z]+\d{4}\/?$/.test(pathname)) return '/f/';
   if (/^\/desa\/jurnal\/[a-z]+\d{4}\/?$/.test(pathname)) return '/f/';
   if (/^\/musdes\/\d{8}\/?$/.test(pathname)) return '/f/';

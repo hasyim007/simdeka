@@ -289,6 +289,23 @@ function ndReplaceAll(){
  const fq=document.getElementById('ndFq');if(fq)fq.focus({preventScroll:true});
 }
 
+/* ---------- 7b. Toolbar bisa diminimalkan + sembunyi otomatis saat menulis (layar kecil) ---------- */
+const NDTB={min:false,lock:0,y:0};
+try{NDTB.min=localStorage.getItem('sd_nd_tb')==='min';}catch(e){}
+function ndSmall(){return window.matchMedia&&window.matchMedia('(max-width:820px)').matches;}
+function ndTbSet(min){
+ NDTB.min=!!min;NDTB.lock=Date.now()+350;
+ const tb=document.querySelector('.nd-tb');if(tb)tb.classList.toggle('min',NDTB.min);
+}
+function ndTbToggle(){
+ ndTbSet(!NDTB.min);
+ try{localStorage.setItem('sd_nd_tb',NDTB.min?'min':'auto');}catch(e){}   // 'min' = tetap tersembunyi sampai dibuka lagi
+}
+(function(){
+ const _tab=ndTab;
+ ndTab=function(id){if(NDTB.min)ndTbSet(false);return _tab.apply(this,arguments);};
+})();
+
 /* ---------- 8. Ribbon (ndToolbar lengkap) ---------- */
 function ndToolbar(d){
  const cur=MS_UI.rb||'home';
@@ -329,8 +346,9 @@ function ndToolbar(d){
   +'<span class="rb-hint">Cari & ganti bekerja pada isi notulensi. Enter untuk hasil berikutnya, Shift+Enter untuk sebelumnya.</span>';
  const sec=G(ND_NAV.map(function(x){return B('go-'+x[0],'Ke bagian '+x[1],'<span>'+x[1]+'</span>',"ndGo('"+x[0]+"')");}).join(''));
  const P={home:home,ins:ins,rev:rev,tbl:tbl,sec:sec};
- return '<div class="nd-tb" onmousedown="if(!event.target.closest(\'select,input,label\'))event.preventDefault()">'
-  +'<div class="rb-tabs" role="tablist">'+ND_TABS.map(function(t){return '<button type="button" role="tab" class="rb-tab'+(t[0]===cur?' on':'')+'" data-t="'+t[0]+'" onclick="ndTab(\''+t[0]+'\')">'+t[1]+'</button>';}).join('')+'</div>'
+ return '<div class="nd-tb'+(NDTB.min?' min':'')+'" onmousedown="if(!event.target.closest(\'select,input,label\'))event.preventDefault()">'
+  +'<div class="rb-tabs" role="tablist">'+ND_TABS.map(function(t){return '<button type="button" role="tab" class="rb-tab'+(t[0]===cur?' on':'')+'" data-t="'+t[0]+'" onclick="ndTab(\''+t[0]+'\')">'+t[1]+'</button>';}).join('')
+  +'<button type="button" class="rb-min" onclick="ndTbToggle()" title="Sembunyikan / tampilkan toolbar" aria-label="Sembunyikan atau tampilkan toolbar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button></div>'
   +'<div class="rb-body">'+ND_TABS.map(function(t){return '<div class="rb-pn'+(t[0]===cur?' on':'')+'" data-t="'+t[0]+'" role="tabpanel">'+P[t[0]]+'</div>';}).join('')+'</div></div>';
 }
 
@@ -347,6 +365,19 @@ const _msBookOrig=msBook;
 msBook=function(){const r=_msBookOrig.apply(this,arguments);ndMount();return r;};
 
 const ndBody=document.getElementById('modalBody');
+/* Layar kecil: toolbar menyembunyikan diri saat mengetik atau menggulir ke bawah, muncul lagi saat menggulir ke atas */
+ndBody.addEventListener('scroll',function(e){
+ const c=e.target;if(!c.classList||!c.classList.contains('nd-canvas')||!ndSmall())return;
+ if(Date.now()<NDTB.lock){NDTB.y=c.scrollTop;return;}
+ const dy=c.scrollTop-NDTB.y;
+ if(dy>28){if(!NDTB.min)ndTbSet(true);NDTB.y=c.scrollTop;}
+ else if(dy<-28){let pinned='';try{pinned=localStorage.getItem('sd_nd_tb');}catch(x){}
+  if(NDTB.min&&pinned!=='min')ndTbSet(false);NDTB.y=c.scrollTop;}
+},true);
+ndBody.addEventListener('focusin',function(e){NDTB.y=(document.querySelector('.nd-canvas')||{}).scrollTop||0;});
+ndBody.addEventListener('input',function(e){
+ if(ndSmall()&&!NDTB.min&&e.target.closest&&e.target.closest('.nd-paper'))ndTbSet(true);
+});
 ndBody.addEventListener('input',function(e){
  const t=e.target;
  if(t.id==='ndFq'){NDF.hits=ndFindCollect(ndFindQ());NDF.idx=NDF.hits.length?0:-1;if(NDF.hits.length)ndFindSelect(0);ndFindCount();return;}
